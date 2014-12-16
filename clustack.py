@@ -157,26 +157,39 @@ class Builder(object):
 
         shelf_bin_path = os.path.join(self.own_shelf_dir, 'bin')
 
-        bin_to_link = 'python'
+        for bin_to_link in os.listdir(shelf_bin_path):
+            link_from = os.path.join(shelf_bin_path, bin_to_link)
+            link_to = os.path.join(bin_dir, bin_to_link)
 
-        link_from = os.path.join(shelf_bin_path, bin_to_link)
-        link_to = os.path.join(bin_dir, bin_to_link)
+            safe_symlink(link_from, link_to)
 
-        safe_symlink(link_from, link_to)
 
-        
+    def install(self):
+        self.cached_fetch()
+        self.unpack()
+        self.build()
+        self.link()
+
+class CMakeBuilder(Builder):
+
+    def __init__(self):
+        self.url = 'http://www.cmake.org/files/v3.0/cmake-3.0.2.tar.gz'
+        self.name = 'cmake'
+
+class PythonBuilder(Builder):
+    def __init__(self):
+        self.url = "https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz"
+        self.name = 'python'
+
 def main():
 
     #url = 'http://fossies.org/linux/misc/xz-5.0.7.tar.bz2'
-    url = "https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz"
-    name = 'python'
-    pbuilder = Builder(name, url)
 
-    pbuilder.cached_fetch()
-    pbuilder.unpack()
-    pbuilder.build()
+    # pbuilder.cached_fetch()
+    # pbuilder.unpack()
+    # pbuilder.build()
 
-    pbuilder.link()
+    #pbuilder.link()
 
     # url = 'https://pypi.python.org/packages/source/s/setuptools/setuptools-5.4.2.tar.gz'
     # name = 'setuptools'
@@ -187,6 +200,11 @@ def main():
     # sbuilder.unpack()
 
     # print sbuilder.full_unpack_dir
+
+    # cm = CMakeBuilder()
+    # cm.install()
+
+    pass
 
 
 if __name__ == "__main__":
