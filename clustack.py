@@ -3,6 +3,7 @@ import sys
 import errno
 import subprocess
 
+bin_dir = os.path.join(os.getcwd(), 'bin')
 cache_dir = '.cache'
 shelf_dir = os.path.join(os.getcwd(), 'shelf')
 
@@ -138,15 +139,30 @@ class Builder(object):
         sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
         #os.chdir(pwd)
 
+    @property
+    def full_unpack_dir(self):
+        unpack_dir = os.listdir(self.source_dir)[0]
+        return os.path.join(self.source_dir, unpack_dir)
+
     def build(self):
         safe_mkdir(self.own_shelf_dir)
-        unpack_dir = os.listdir(self.source_dir)[0]
-        full_unpack_dir = os.path.join(self.source_dir, unpack_dir)
 
-        os.chdir(full_unpack_dir)
+        os.chdir(self.full_unpack_dir)
 
-        #sys_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
+        sys_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
         sys_command(['make', 'install'])
+
+    def link(self):
+        safe_mkdir(bin_dir)
+
+        shelf_bin_path = os.path.join(self.own_shelf_dir, 'bin')
+
+        bin_to_link = 'python'
+
+        link_from = os.path.join(shelf_bin_path, bin_to_link)
+        link_to = os.path.join(bin_dir, bin_to_link)
+
+        safe_symlink(link_from, link_to)
 
         
 def main():
@@ -159,6 +175,19 @@ def main():
     pbuilder.cached_fetch()
     pbuilder.unpack()
     pbuilder.build()
+
+    pbuilder.link()
+
+    # url = 'https://pypi.python.org/packages/source/s/setuptools/setuptools-5.4.2.tar.gz'
+    # name = 'setuptools'
+
+    # sbuilder = Builder(name, url)
+
+    # sbuilder.cached_fetch()
+    # sbuilder.unpack()
+
+    # print sbuilder.full_unpack_dir
+
 
 if __name__ == "__main__":
     main()
