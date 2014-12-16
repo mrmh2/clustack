@@ -3,6 +3,9 @@ import sys
 import errno
 import subprocess
 
+cache_dir = '.cache'
+shelf_dir = os.path.join(os.getcwd(), 'shelf')
+
 def safe_mkdir(dir_path):
 
     try:
@@ -23,12 +26,12 @@ def safe_symlink(link_from, link_to):
 
 def sys_command(args):
     
-    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(args)
     p.wait()
 
-def main():
+def make_structure():
 
-    cache_dir = '.cache'
 
     root_path = os.getcwd()
 
@@ -40,11 +43,16 @@ def main():
     safe_mkdir(cache_dir)
     safe_mkdir(target_dir)
 
+def download(url):
 
     os.chdir(cache_dir)
 
-    url = 'http://fossies.org/linux/misc/xz-5.0.7.tar.bz2'
-    
+    sys_command(['wget', url])
+
+def download_and_build(url):
+
+    os.chdir(cache_dir)
+
     sys_command(['wget', url])
 
     sys_command(['tar', '-xvjf', 'xz-5.0.7.tar.bz2'])
@@ -59,6 +67,98 @@ def main():
     dest_link = os.path.join(bin_dir, 'xz')
 
     safe_symlink(target_to_link, dest_link)
+
+def string_after(string, character):
+    return string.split(character)[1]
+
+def string_before(string, character):
+    return string.split(character)[0]
+
+def string_between(string, start_char, end_char):
+
+    return string_after(string_before(string, end_char), start_char)
+
+def extract_version(url):
+    components = url.split('/')
+
+    filename = components[-1]
+
+    return string_between(filename, '-', '.tgz')
+
+def extract_packed_name(url):
+    components = url.split('/')
+
+    filename = components[-1]
+
+    return filename
+
+class Builder(object):
+
+    def __init__(self, name, url):
+        self.name = name
+        self.url = url
+
+    @property
+    def version(self):
+        try:
+            return self._version
+        except AttributeError:
+            self._version = extract_version(self.url)
+            return self._version
+
+    @property
+    def packed_name(self):
+        return extract_packed_name(self.url)
+
+    @property
+    def own_cache_dir(self):
+        return os.path.join(cache_dir, self.name, self.version)
+
+    @property
+    def own_shelf_dir(self):
+        return os.path.join(shelf_dir, self.name, self.version)
+
+    def cached_fetch(self):
+        safe_mkdir(self.source_dir)
+
+        full_target_name = os.path.join(self.own_cache_dir, self.packed_name)
+
+        if not os.path.exists(full_target_name):
+            sys_command(['curl', self.url, '-o', full_target_name])
+
+    @property
+    def source_dir(self):
+        return os.path.join(self.own_cache_dir, 'source')
+
+    def unpack(self):
+        # pwd = os.getcwd()
+        # os.chdir(self.source_dir)
+        full_packed_name = os.path.join(self.own_cache_dir, self.packed_name)
+        
+        sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
+        #os.chdir(pwd)
+
+    def build(self):
+        safe_mkdir(self.own_shelf_dir)
+        unpack_dir = os.listdir(self.source_dir)[0]
+        full_unpack_dir = os.path.join(self.source_dir, unpack_dir)
+
+        os.chdir(full_unpack_dir)
+
+        #sys_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
+        sys_command(['make', 'install'])
+
+        
+def main():
+
+    #url = 'http://fossies.org/linux/misc/xz-5.0.7.tar.bz2'
+    url = "https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz"
+    name = 'python'
+    pbuilder = Builder(name, url)
+
+    pbuilder.cached_fetch()
+    pbuilder.unpack()
+    pbuilder.build()
 
 if __name__ == "__main__":
     main()
