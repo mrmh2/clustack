@@ -1,9 +1,12 @@
 import os
 import sys
 import errno
+import urllib
 import subprocess
 
 bin_dir = os.path.join(os.getcwd(), 'bin')
+include_dir = os.path.join(os.getcwd(), 'include')
+lib_dir = os.path.join(os.getcwd(), 'lib')
 cache_dir = '.cache'
 shelf_dir = os.path.join(os.getcwd(), 'shelf')
 
@@ -49,6 +52,10 @@ def download(url):
     os.chdir(cache_dir)
 
     sys_command(['wget', url])
+
+def download_and_save(url, filename):
+    
+    urllib.urlretrieve(url, filename)
 
 def download_and_build(url):
 
@@ -125,7 +132,8 @@ class Builder(object):
         full_target_name = os.path.join(self.own_cache_dir, self.packed_name)
 
         if not os.path.exists(full_target_name):
-            sys_command(['curl', self.url, '-o', full_target_name])
+            #sys_command(['curl', self.url, '-o', full_target_name])
+            download_and_save(self.url, full_target_name)
 
     @property
     def source_dir(self):
@@ -149,22 +157,43 @@ class Builder(object):
 
         os.chdir(self.full_unpack_dir)
 
-        sys_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
-        sys_command(['make', 'install'])
+        files = os.listdir(os.getcwd())
 
-    def link(self):
-        safe_mkdir(bin_dir)
+        if 'CMakeLists.txt' in files:
+            safe_mkdir('build')
+            os.chdir('build')
+            cmake_flags = "-DCMAKE_INSTALL_PREFIX:PATH={}".format(self.own_shelf_dir)
+            sys_command(['cmake', cmake_flags, '..'])
+            self.env_manager.run_command(['make', 'install'])
+        else:
+            sys_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
+            sys_command(['make', 'install'])
 
-        shelf_bin_path = os.path.join(self.own_shelf_dir, 'bin')
+    def link_from_subdir(self, subdir_name, dest_dir):
+        """Link files in a particular subdirectory of the compiled package (e.g.
+        bin, lib, include) into the overall equivalent directory"""
 
-        for bin_to_link in os.listdir(shelf_bin_path):
-            link_from = os.path.join(shelf_bin_path, bin_to_link)
-            link_to = os.path.join(bin_dir, bin_to_link)
+        safe_mkdir(dest_dir)
+
+        shelf_path = os.path.join(self.own_shelf_dir, subdir_name)
+        for file_to_link in os.listdir(shelf_path):
+            link_from = os.path.join(shelf_path, file_to_link)
+            link_to = os.path.join(dest_dir, file_to_link)
 
             safe_symlink(link_from, link_to)
 
+    def link(self):
+
+        self.link_from_subdir('lib', lib_dir)
+        self.link_from_subdir('include', include_dir)
+
+        # safe_mkdir(bin_dir)
 
     def install(self):
+        self.env_manager = EnvManager()
+        self.env_manager.set_variable('CPATH', include_dir)
+        self.env_manager.set_variable('LIBRARY_PATH', lib_dir)
+
         self.cached_fetch()
         self.unpack()
         self.build()
@@ -181,7 +210,72 @@ class PythonBuilder(Builder):
         self.url = "https://www.python.org/ftp/python/2.7.8/Python-2.7.8.tgz"
         self.name = 'python'
 
+class BamToolsBuilder(Builder):
+    def __init__(self):
+        self.url = "https://github.com/pezmaster31/bamtools/archive/v2.3.0.tar.gz"
+        self.name = 'bamtools'
+        self._version = '2.3.0'
+
+class ZlibBuilder(Builder):
+    def __init__(self):
+        self.url = 'http://zlib.net/zlib-1.2.8.tar.gz'
+        self.name = 'zlib'
+        self._version = '1.2.8'
+
+class EnvManager(object):
+    """Manage UNIX environment variables for specific building"""
+
+    def __init__(self):
+        self.start_env = os.environ.copy()
+        self.path_list = []
+        self.my_env = self.start_env
+        #self.my_env = {'PATH': ''}
+
+    def dump(self):
+        print self.my_env
+
+    def build_path(self):
+        self.my_env["PATH"] = ':'.join(self.path_list)
+
+    def add_path(self, path):
+        self.path_list.append(path)
+        self.build_path()
+
+    def run_command(self, command):
+        p = subprocess.Popen(command, env=self.my_env)
+        p.wait()
+
+    def set_variable(self, variable, value):
+        self.my_env[variable] = value
+
+def test_env_manager():
+
+    myenv = EnvManager()
+
+    myenv.add_path('/usr/bin')
+    myenv.add_path('/bin')
+
+    myenv.dump()
+
+    myenv.run_command('ls')
+
 def main():
+
+    #LIBRARY_PATH
+    #CPATH
+
+    # zb = ZlibBuilder()
+    # zb.install()
+
+    # pb = PythonBuilder()
+    # pb.install()
+
+    bb = BamToolsBuilder()
+    bb.install()
+
+    #print bb.url
+
+    #urllib.urlretrieve(bb.url, '2.3.0.tar.gz')
 
     #url = 'http://fossies.org/linux/misc/xz-5.0.7.tar.bz2'
 
