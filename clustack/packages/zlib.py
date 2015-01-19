@@ -1,4 +1,4 @@
-import Builder
+from clustack.builder import Builder
 
 class ZlibBuilder(Builder):
     def __init__(self):

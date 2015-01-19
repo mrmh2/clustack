@@ -1,5 +1,6 @@
 import os
 import errno
+import urllib
 import subprocess
 
 from envmanager import EnvManager
@@ -9,6 +10,10 @@ include_dir = os.path.join(os.getcwd(), 'include')
 lib_dir = os.path.join(os.getcwd(), 'lib')
 cache_dir = '.cache'
 shelf_dir = os.path.join(os.getcwd(), 'shelf')
+
+def download_and_save(url, filename):
+    
+    urllib.urlretrieve(url, filename)
 
 def string_after(string, character):
     return string.split(character)[1]
@@ -134,6 +139,10 @@ class Builder(object):
         safe_mkdir(dest_dir)
 
         shelf_path = os.path.join(self.own_shelf_dir, subdir_name)
+
+        if not os.path.exists(shelf_path):
+            return
+
         for file_to_link in os.listdir(shelf_path):
             link_from = os.path.join(shelf_path, file_to_link)
             link_to = os.path.join(dest_dir, file_to_link)

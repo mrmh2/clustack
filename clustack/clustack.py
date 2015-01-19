@@ -28,9 +28,6 @@ def download(url):
 
     sys_command(['wget', url])
 
-def download_and_save(url, filename):
-    
-    urllib.urlretrieve(url, filename)
 
 def download_and_build(url):
 
