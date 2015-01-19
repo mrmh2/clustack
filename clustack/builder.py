@@ -10,6 +10,16 @@ lib_dir = os.path.join(os.getcwd(), 'lib')
 cache_dir = '.cache'
 shelf_dir = os.path.join(os.getcwd(), 'shelf')
 
+def string_after(string, character):
+    return string.split(character)[1]
+
+def string_before(string, character):
+    return string.split(character)[0]
+
+def string_between(string, start_char, end_char):
+
+    return string_after(string_before(string, end_char), start_char)
+
 def extract_version(url):
     components = url.split('/')
 

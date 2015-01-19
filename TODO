@@ -1,0 +1,4 @@
+* Move all generated files into a subdirectory. 
+* Generate a sourceable bash script.
+* Better name than packages.
+* Fix module import to work more nicely.

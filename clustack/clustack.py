@@ -1,3 +1,6 @@
+"""Software compilation and install automation designed to manage software
+stacks for cluster computing."""
+
 import os
 import sys
 import errno
@@ -5,8 +8,6 @@ import urllib
 import subprocess
 
 from builder import Builder
-
-
 
 def make_structure():
 
@@ -50,15 +51,6 @@ def download_and_build(url):
 
     safe_symlink(target_to_link, dest_link)
 
-def string_after(string, character):
-    return string.split(character)[1]
-
-def string_before(string, character):
-    return string.split(character)[0]
-
-def string_between(string, start_char, end_char):
-
-    return string_after(string_before(string, end_char), start_char)
 
 
 
@@ -86,10 +78,7 @@ class ZlibBuilder(Builder):
         self._version = '1.2.8'
 
 
-def main():
-
-    #LIBRARY_PATH
-    #CPATH
+def oldmain():
 
     # zb = ZlibBuilder()
     # zb.install()
@@ -127,6 +116,10 @@ def main():
 
     pass
 
+def main():
+
+    pass
+    
 
 if __name__ == "__main__":
     main()
