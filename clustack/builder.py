@@ -3,6 +3,8 @@ import errno
 import urllib
 import subprocess
 
+from utils import safe_mkdir, sys_command
+
 from envmanager import EnvManager
 
 bin_dir = os.path.join(os.getcwd(), 'bin')
@@ -39,14 +41,6 @@ def extract_packed_name(url):
 
     return filename
 
-def safe_mkdir(dir_path):
-
-    try:
-        os.makedirs(dir_path)
-    except OSError, e:
-        if e.errno != errno.EEXIST:
-            print "Error creating directory %s" % dir_path
-            sys.exit(2)
 
 def safe_symlink(link_from, link_to):
     try:
@@ -57,11 +51,6 @@ def safe_symlink(link_from, link_to):
             print "Error symlinking: ", e
             sys.exit(2)
 
-def sys_command(args):
-    
-#    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p = subprocess.Popen(args)
-    p.wait()
 
 class Builder(object):
 
