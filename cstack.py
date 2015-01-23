@@ -8,6 +8,7 @@ import argparse
 import importlib
 
 from clustack.builder import Builder
+from clustack.create import generate_builder
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
@@ -33,6 +34,9 @@ def install_package(args):
                 loaded_builder = obj()
                 loaded_builder.install()
     
+def create_builder(args):
+
+    generate_builder(args.name, args.url)
 
 def main():
 
@@ -47,6 +51,11 @@ def main():
     parser_install = subparsers.add_parser('install', help='Install a package')
     parser_install.add_argument('name')
     parser_install.set_defaults(func=install_package)
+
+    parser_create = subparsers.add_parser('create', help='Create a builder')
+    parser_create.add_argument('name')
+    parser_create.add_argument('url')
+    parser_create.set_defaults(func=create_builder)
 
     args = parser.parse_args()
 
