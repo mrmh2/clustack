@@ -13,7 +13,15 @@ package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
 def list_packages(args):
 
-    print os.listdir(package_dir)
+    all_files = os.listdir(package_dir)
+
+    split_names = [os.path.splitext(f) for f in all_files]
+
+    builder_files = [name for name, ext in split_names if ext == '.py']
+
+    builder_files.sort()
+
+    print '\t'.join(builder_files)
 
 def install_package(args):
 
