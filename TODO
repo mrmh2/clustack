@@ -2,3 +2,5 @@
 * Generate a sourceable bash script.
 * Better name than packages.
 * Fix module import to work more nicely.
+* Easy template creation
+* Fix use of sys_command in existing build scripts

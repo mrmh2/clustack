@@ -115,11 +115,11 @@ class Builder(object):
             safe_mkdir('build')
             os.chdir('build')
             cmake_flags = "-DCMAKE_INSTALL_PREFIX:PATH={}".format(self.own_shelf_dir)
-            sys_command(['cmake', cmake_flags, '..'])
+            self.env_manager.run_command(['cmake', cmake_flags, '..'])
             self.env_manager.run_command(['make', 'install'])
         else:
-            sys_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
-            sys_command(['make', 'install'])
+            self.env_manager.run_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
+            self.env_manager.run_command(['make', 'install'])
 
     def link_from_subdir(self, subdir_name, dest_dir):
         """Link files in a particular subdirectory of the compiled package (e.g.
