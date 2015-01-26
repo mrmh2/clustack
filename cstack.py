@@ -9,6 +9,8 @@ import importlib
 
 from clustack.builder import Builder
 from clustack.create import generate_builder
+from clustack.utils import sys_command
+from clustack import settings
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
@@ -28,15 +30,29 @@ def install_package(args):
 
     module = importlib.import_module(args.name)
 
+    # FIXME - better way to do this 
+    other_classes = ["Builder", "BuildDir"]
     for name, obj in inspect.getmembers(module):
         if inspect.isclass(obj):
-            if name is not "Builder":
+            if name not in other_classes:
                 loaded_builder = obj()
                 loaded_builder.install()
     
 def create_builder(args):
 
     generate_builder(args.name, args.url)
+
+def edit_builder(args):
+    name = args.name
+
+    builder_dir = settings.package_dir
+
+    filename = name.lower() + '.py'
+
+    full_path_name = os.path.join(builder_dir, filename)
+
+    sys_command(['vim', full_path_name])
+
 
 def main():
 
@@ -56,6 +72,10 @@ def main():
     parser_create.add_argument('name')
     parser_create.add_argument('url')
     parser_create.set_defaults(func=create_builder)
+
+    parser_edit = subparsers.add_parser('edit', help='Edit a builder')
+    parser_edit.add_argument('name')
+    parser_edit.set_defaults(func=edit_builder)
 
     args = parser.parse_args()
 

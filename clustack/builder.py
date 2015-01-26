@@ -1,4 +1,5 @@
 import os
+import sys
 import errno
 import urllib
 import subprocess
@@ -12,6 +13,10 @@ include_dir = os.path.join(os.getcwd(), 'include')
 lib_dir = os.path.join(os.getcwd(), 'lib')
 cache_dir = '.cache'
 shelf_dir = os.path.join(os.getcwd(), 'shelf')
+
+def debug_break():
+    print("*** Break ***")
+    sys.exit(0)
 
 def download_and_save(url, filename):
     
@@ -53,6 +58,24 @@ def safe_symlink(link_from, link_to):
 
 
 class Builder(object):
+    """
+
+We expect to perform the following stages:
+
+    download
+    unpack
+    configure
+    build
+    install
+    link
+
+Special directories:
+
+    shelf_dir
+    cache_dir
+    source_dir
+    install_dir
+    build_dir"""
 
     def __init__(self, name, url):
         self.name = name
@@ -76,9 +99,20 @@ class Builder(object):
 
     @property
     def own_shelf_dir(self):
+        """Path for installed files."""
+
         return os.path.join(shelf_dir, self.name, self.version)
 
+    @property
+    def source_dir(self):
+        """Path to store source archive and unpacked source"""
+
+        return os.path.join(self.own_cache_dir, 'source')
+
     def cached_fetch(self):
+        """Fetch the package source from its URL and save it in our source
+        directory"""
+
         safe_mkdir(self.source_dir)
 
         full_target_name = os.path.join(self.own_cache_dir, self.packed_name)
@@ -87,17 +121,16 @@ class Builder(object):
             #sys_command(['curl', self.url, '-o', full_target_name])
             download_and_save(self.url, full_target_name)
 
-    @property
-    def source_dir(self):
-        return os.path.join(self.own_cache_dir, 'source')
 
     def unpack(self):
-        # pwd = os.getcwd()
-        # os.chdir(self.source_dir)
+        """Unpack the source archive into a source specific subdirectory of its
+        unpack area"""
+
         full_packed_name = os.path.join(self.own_cache_dir, self.packed_name)
-        
-        sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
-        #os.chdir(pwd)
+
+        # Unpack only if we haven't done so already
+        if not len(os.listdir(self.source_dir)):
+            sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
 
     @property
     def full_unpack_dir(self):
