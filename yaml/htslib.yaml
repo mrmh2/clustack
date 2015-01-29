@@ -1,0 +1,6 @@
+name : htslib
+url : https://github.com/samtools/htslib/archive/1.1.tar.gz
+version : 1.1
+
+build:
+    - make
