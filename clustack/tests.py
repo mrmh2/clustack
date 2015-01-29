@@ -2,8 +2,10 @@ import os
 import tempfile
 import unittest
 
-from utils import BuildDir
+import settings
+from utils import BuildDir, extract_packed_name
 from builder import Builder
+from envmanager import EnvManager
 
 initial_cwd = os.getcwd()
 
@@ -49,34 +51,38 @@ class BuilderPathTests(unittest.TestCase):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'x86_64')
         self.assertEqual(self.testBuilder.install_dir, expected_dir)
 
+class BuilderBasicsTestCase(unittest.TestCase):
 
-def test_builddir():
+    def setUp(self):
+        self.testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
+        self.testBuilder._version = '1.2.8'
 
-    tempdir = tempfile.mkdtemp()
+    def test_packed_name(self):
+        self.assertEqual(self.testBuilder.packed_name, 'zlib-1.2.8.tar.gz')
 
-    os.chdir(tempdir)
+class BuilderStageTestCase(unittest.TestCase):
 
-    with BuildDir():
-        print os.getcwd()
+    def setUp(self):
+        self.testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
+        self.testBuilder._version = '1.2.8'
 
-def test_constructor():
-    testBuilder = Builder("zlib", 'http://zlib.net/zlib-1.2.8.tar.gz')
+class SettingsTestCase(unittest.TestCase):
 
-# Expectation: shelf_dir
+    def test_shelf_dir(self):
+        expected_dir = os.path.join(initial_cwd, 'shelf')
+        self.assertEqual(settings.shelf_dir, expected_dir)
 
-def test_shelf_dir():
-    testBuilder = Builder("zlib", 'http://zlib.net/zlib-1.2.8.tar.gz')
+class EnvManagerTestCase(unittest.TestCase):
 
-    shelf_dir = testBuilder.shelf_dir
-    expected_dir = os.path.join(os.getcwd(), 'shelf', 'zlib')
+    def setUp(self):
+        self.env_manager = EnvManager()
 
-    assert shelf_dir == expected_dir
-    
-    
-def test_builder():
-    test_constructor()
+class UtilFunctionsTestCase(unittest.TestCase):
 
-    test_shelf_dir()
+    def test_extract_packed_name(self):`
+        packed_name = extract_packed_name('http://zlib.net/zlib-1.2.8.tar.gz')
+
+        self.assertEqual(packed_name, 'zlib-1.2.8.tar.gz')
     
 def main():
     #test_builddir()

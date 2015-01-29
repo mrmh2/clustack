@@ -3,6 +3,13 @@ import sys
 import errno
 import subprocess
 
+def extract_packed_name(url):
+    components = url.split('/')
+
+    filename = components[-1]
+
+    return filename
+
 def safe_mkdir(dir_path):
 
     try:

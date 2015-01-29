@@ -4,7 +4,7 @@ import errno
 import urllib
 import subprocess
 
-from utils import safe_mkdir, sys_command
+from utils import safe_mkdir, sys_command, extract_packed_name
 import settings
 
 from envmanager import EnvManager
@@ -57,6 +57,12 @@ from envmanager import EnvManager
 #             print "Error symlinking: ", e
 #             sys.exit(2)
 
+builder_stages = [ "DOWNLOAD",
+                   "UNPACK",
+                   "CONFIGURE",
+                   "BUILD",
+                   "INSTALL",
+                   "LINK" ]
 
 class Builder(object):
     """
@@ -135,9 +141,19 @@ Special directories:
             self._version = extract_version(self.url)
             return self._version
 
-    # @property
-    # def packed_name(self):
-    #     return extract_packed_name(self.url)
+    def check_stage_finished(self, stage_name):
+        """Test to see whether the construction phase with the given name is
+        finished."""
+
+        if stage_name == "DOWNLOAD":
+            pass
+
+    @property
+    def packed_name(self):
+        """Return the name of the source tarball (or equivalent) used in the
+        package"""
+
+        return extract_packed_name(self.url)
 
     # @property
     # def own_cache_dir(self):
