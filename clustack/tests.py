@@ -60,12 +60,6 @@ class BuilderBasicsTestCase(unittest.TestCase):
     def test_packed_name(self):
         self.assertEqual(self.testBuilder.packed_name, 'zlib-1.2.8.tar.gz')
 
-class BuilderStageTestCase(unittest.TestCase):
-
-    def setUp(self):
-        self.testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
-        self.testBuilder._version = '1.2.8'
-
 class SettingsTestCase(unittest.TestCase):
 
     def test_shelf_dir(self):
@@ -79,14 +73,12 @@ class EnvManagerTestCase(unittest.TestCase):
 
 class UtilFunctionsTestCase(unittest.TestCase):
 
-    def test_extract_packed_name(self):`
+    def test_extract_packed_name(self):
         packed_name = extract_packed_name('http://zlib.net/zlib-1.2.8.tar.gz')
 
         self.assertEqual(packed_name, 'zlib-1.2.8.tar.gz')
     
 def main():
-    #test_builddir()
-    #test_builder()
     unittest.main()
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import os
 import sys
 import errno
+import urllib
 import subprocess
 
 def extract_packed_name(url):
@@ -24,6 +25,11 @@ def sys_command(args):
 #    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p = subprocess.Popen(args)
     p.wait()
+
+def download_and_save(url, filename):
+    
+     urllib.urlretrieve(url, filename)
+
 
 
 class BuildDir(object):

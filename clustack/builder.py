@@ -4,6 +4,7 @@ import errno
 import urllib
 import subprocess
 
+import utils
 from utils import safe_mkdir, sys_command, extract_packed_name
 import settings
 
@@ -19,9 +20,6 @@ from envmanager import EnvManager
 #     print("*** Break ***")
 #     sys.exit(0)
 
-# def download_and_save(url, filename):
-    
-#     urllib.urlretrieve(url, filename)
 
 # def string_after(string, character):
 #     return string.split(character)[1]
@@ -145,8 +143,12 @@ Special directories:
         """Test to see whether the construction phase with the given name is
         finished."""
 
+        if stage_name not in builder_stages:
+            raise NameError('{} not a valid stage'.format(stage_name))
+
         if stage_name == "DOWNLOAD":
-            pass
+            archive_file_path = os.path.join(self.archive_dir, self.packed_name)
+            return os.path.exists(archive_file_path)
 
     @property
     def packed_name(self):
@@ -171,17 +173,15 @@ Special directories:
 
     #     return os.path.join(self.own_cache_dir, 'source')
 
-    # def cached_fetch(self):
-    #     """Fetch the package source from its URL and save it in our source
-    #     directory"""
+    def download(self):
+        """Fetch the package source from its URL and save it in our source
+        directory"""
 
-    #     safe_mkdir(self.source_dir)
+        safe_mkdir(self.archive_dir)
 
-    #     full_target_name = os.path.join(self.own_cache_dir, self.packed_name)
+        full_target_name = os.path.join(self.archive_dir, self.packed_name)
 
-    #     if not os.path.exists(full_target_name):
-    #         #sys_command(['curl', self.url, '-o', full_target_name])
-    #         download_and_save(self.url, full_target_name)
+        utils.download_and_save(self.url, full_target_name)
 
 
     # def unpack(self):
