@@ -35,6 +35,12 @@ class BuilderPathTests(unittest.TestCase):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'source')
         self.assertEqual(testBuilder.source_dir, expected_dir)
 
+        expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'build')
+        self.assertEqual(testBuilder.build_dir, expected_dir)
+
+        expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'x86_64')
+        self.assertEqual(testBuilder.install_dir, expected_dir)
+
 
 def test_builddir():
 

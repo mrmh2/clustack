@@ -109,6 +109,22 @@ Special directories:
         return os.path.join(self.shelf_dir, 'source')
 
     @property
+    def build_dir(self):
+        """Directory in which package will be built. Of the form:
+
+        base_dir/package_name/package_version/build"""
+
+        return os.path.join(self.shelf_dir, 'build')
+
+    @property
+    def install_dir(self):
+        """Directory to which package will be installed. Of the form:
+
+        base_dir/package_name/package_version/x86_64"""
+
+        return os.path.join(self.shelf_dir, 'x86_64')
+
+    @property
     def version(self):
         """If we've already set our version, return that. Otherwise, attempt to
         derive it from our url"""
