@@ -60,6 +60,11 @@ class BuilderBasicsTestCase(unittest.TestCase):
     def test_packed_name(self):
         self.assertEqual(self.testBuilder.packed_name, 'zlib-1.2.8.tar.gz')
 
+    def test_archive_file_path(self):
+        expected_path = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8',
+                                     'archive', 'zlib-1.2.8.tar.gz')
+        self.assertEqual(self.testBuilder.archive_file_path, expected_path)
+
 class SettingsTestCase(unittest.TestCase):
 
     def test_shelf_dir(self):

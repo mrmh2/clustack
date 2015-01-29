@@ -139,6 +139,7 @@ Special directories:
             self._version = extract_version(self.url)
             return self._version
 
+
     def check_stage_finished(self, stage_name):
         """Test to see whether the construction phase with the given name is
         finished."""
@@ -147,8 +148,20 @@ Special directories:
             raise NameError('{} not a valid stage'.format(stage_name))
 
         if stage_name == "DOWNLOAD":
-            archive_file_path = os.path.join(self.archive_dir, self.packed_name)
-            return os.path.exists(archive_file_path)
+            
+            return os.path.exists(self.archive_file_path)
+
+        if stage_name == "UNPACK":
+            if not os.path.exists(self.source_dir):
+                return False
+
+            if len(os.listdir(self.source_dir)):
+                return True
+            else:
+                return False
+
+        if stage_name == "CONFIGURE":
+            
 
     @property
     def packed_name(self):
@@ -156,6 +169,12 @@ Special directories:
         package"""
 
         return extract_packed_name(self.url)
+
+    @property
+    def archive_file_path(self):
+        """Full path to archive file."""
+
+        return os.path.join(self.archive_dir, self.packed_name)
 
     # @property
     # def own_cache_dir(self):
@@ -175,7 +194,7 @@ Special directories:
 
     def download(self):
         """Fetch the package source from its URL and save it in our source
-        directory"""
+        directory."""
 
         safe_mkdir(self.archive_dir)
 
@@ -184,15 +203,17 @@ Special directories:
         utils.download_and_save(self.url, full_target_name)
 
 
-    # def unpack(self):
-    #     """Unpack the source archive into a source specific subdirectory of its
-    #     unpack area"""
+    def unpack(self):
+        """Unpack the source archive into the source directory."""
 
-    #     full_packed_name = os.path.join(self.own_cache_dir, self.packed_name)
+        safe_mkdir(self.source_dir)
 
-    #     # Unpack only if we haven't done so already
-    #     if not len(os.listdir(self.source_dir)):
-    #         sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
+        sys_command(['tar', '-xf', self.archive_file_path, '-C', self.source_dir])
+        # full_packed_name = os.path.join(self.own_cache_dir, self.packed_name)
+
+        # # Unpack only if we haven't done so already
+        # if not len(os.listdir(self.source_dir)):
+        #     sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
 
     # @property
     # def full_unpack_dir(self):
