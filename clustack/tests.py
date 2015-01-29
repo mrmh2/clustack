@@ -19,27 +19,35 @@ class BuildDirTestCase(unittest.TestCase):
             self.assertEqual(os.getcwd(), expected_path)
 
 class BuilderPathTests(unittest.TestCase):
-    def runTest(self):
-        testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
-        testBuilder._version = '1.2.8'
 
-        self.assertEqual(testBuilder.name, 'zlib')
-        self.assertEqual(testBuilder.version, '1.2.8')
+    def setUp(self):
+        self.testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
+        self.testBuilder._version = '1.2.8'
 
+    def test_name_and_version(self):
+
+        self.assertEqual(self.testBuilder.name, 'zlib')
+        self.assertEqual(self.testBuilder.version, '1.2.8')
+
+    def test_shelf_dir(self):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8')
-        self.assertEqual(testBuilder.shelf_dir, expected_dir)
+        self.assertEqual(self.testBuilder.shelf_dir, expected_dir)
 
+    def test_archive_dir(self):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'archive')
-        self.assertEqual(testBuilder.archive_dir, expected_dir)
+        self.assertEqual(self.testBuilder.archive_dir, expected_dir)
 
+    def test_source_dir(self):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'source')
-        self.assertEqual(testBuilder.source_dir, expected_dir)
+        self.assertEqual(self.testBuilder.source_dir, expected_dir)
 
+    def test_build_dir(self):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'build')
-        self.assertEqual(testBuilder.build_dir, expected_dir)
+        self.assertEqual(self.testBuilder.build_dir, expected_dir)
 
+    def test_install_dir(self):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'x86_64')
-        self.assertEqual(testBuilder.install_dir, expected_dir)
+        self.assertEqual(self.testBuilder.install_dir, expected_dir)
 
 
 def test_builddir():
