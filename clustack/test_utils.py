@@ -44,8 +44,15 @@ class BuilderPathTests(unittest.TestCase):
         self.assertEqual(self.testBuilder.source_dir, expected_dir)
 
     def test_build_dir(self):
-        expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'build')
+        # Build in source is true by default
+        expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'source')
         self.assertEqual(self.testBuilder.build_dir, expected_dir)
+
+        # Test that with build in source set to false we use a different build dir
+        buildDirBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz', False)
+        buildDirBuilder._version = '1.2.8'
+        expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'build')
+        self.assertEqual(buildDirBuilder.build_dir, expected_dir)
 
     def test_install_dir(self):
         expected_dir = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8', 'x86_64')
@@ -60,10 +67,20 @@ class BuilderBasicsTestCase(unittest.TestCase):
     def test_packed_name(self):
         self.assertEqual(self.testBuilder.packed_name, 'zlib-1.2.8.tar.gz')
 
+    def test_version_exception(self):
+        noverBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
+
+        with self.assertRaises(Exception):
+            noverBuilder.shelf_dir
+
     def test_archive_file_path(self):
         expected_path = os.path.join(initial_cwd, 'shelf', 'zlib', '1.2.8',
                                      'archive', 'zlib-1.2.8.tar.gz')
         self.assertEqual(self.testBuilder.archive_file_path, expected_path)
+
+    def test_run_commmand(self):
+        self.assertEqual(self.testBuilder.system("true"), 0)
+        self.assertNotEqual(self.testBuilder.system("false"), 0)
 
 class SettingsTestCase(unittest.TestCase):
 
@@ -73,8 +90,13 @@ class SettingsTestCase(unittest.TestCase):
 
 class EnvManagerTestCase(unittest.TestCase):
 
-    def setUp(self):
-        self.env_manager = EnvManager()
+    # def setUp(self):
+    #     self.env_manager = EnvManager()
+
+    def test_initial_path(self):
+        env_manager = EnvManager()
+
+        self.assertTrue(len(env_manager.PATH))
 
 class UtilFunctionsTestCase(unittest.TestCase):
 
