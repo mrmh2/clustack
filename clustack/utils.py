@@ -4,6 +4,23 @@ import errno
 import urllib
 import subprocess
 
+def string_after(string, character):
+    return string.split(character)[1]
+
+def string_before(string, character):
+    return string.split(character)[0]
+
+def string_between(string, start_char, end_char):
+
+    return string_after(string_before(string, end_char), start_char)
+
+def extract_version(url):
+    components = url.split('/')
+
+    filename = components[-1]
+
+    return string_between(filename, '-', '.tgz')
+
 def extract_packed_name(url):
     components = url.split('/')
 

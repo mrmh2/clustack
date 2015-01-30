@@ -22,41 +22,6 @@ from envmanager import EnvManager
 #     print("*** Break ***")
 #     sys.exit(0)
 
-
-# def string_after(string, character):
-#     return string.split(character)[1]
-
-# def string_before(string, character):
-#     return string.split(character)[0]
-
-# def string_between(string, start_char, end_char):
-
-#     return string_after(string_before(string, end_char), start_char)
-
-# def extract_version(url):
-#     components = url.split('/')
-
-#     filename = components[-1]
-
-#     return string_between(filename, '-', '.tgz')
-
-# def extract_packed_name(url):
-#     components = url.split('/')
-
-#     filename = components[-1]
-
-#     return filename
-
-
-# def safe_symlink(link_from, link_to):
-#     try:
-
-#         os.symlink(link_from, link_to)
-#     except OSError, e:
-#         if e.errno != errno.EEXIST:
-#             print "Error symlinking: ", e
-#             sys.exit(2)
-
 builder_stages = [ "DOWNLOAD",
                    "UNPACK",
                    "CONFIGURE",
@@ -279,28 +244,6 @@ source and build are by default the same directory."""
         safe_mkdir(self.install_dir)
 
         self.system(['make', 'install'])
-
-    # @property
-    # def full_unpack_dir(self):
-    #     unpack_dir = os.listdir(self.source_dir)[0]
-    #     return os.path.join(self.source_dir, unpack_dir)
-
-    # def build(self):
-    #     safe_mkdir(self.own_shelf_dir)
-
-    #     os.chdir(self.full_unpack_dir)
-
-    #     files = os.listdir(os.getcwd())
-
-    #     if 'CMakeLists.txt' in files:
-    #         safe_mkdir('build')
-    #         os.chdir('build')
-    #         cmake_flags = "-DCMAKE_INSTALL_PREFIX:PATH={}".format(self.own_shelf_dir)
-    #         self.env_manager.run_command(['cmake', cmake_flags, '..'])
-    #         self.env_manager.run_command(['make', 'install'])
-    #     else:
-    #         self.env_manager.run_command(['./configure', '--prefix={}'.format(self.own_shelf_dir)])
-    #         self.env_manager.run_command(['make', 'install'])
 
     # def link_from_subdir(self, subdir_name, dest_dir):
     #     """Link files in a particular subdirectory of the compiled package (e.g.
