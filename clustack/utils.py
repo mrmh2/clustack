@@ -1,7 +1,32 @@
 import os
 import sys
 import errno
+import urllib
 import subprocess
+
+def string_after(string, character):
+    return string.split(character)[1]
+
+def string_before(string, character):
+    return string.split(character)[0]
+
+def string_between(string, start_char, end_char):
+
+    return string_after(string_before(string, end_char), start_char)
+
+def extract_version(url):
+    components = url.split('/')
+
+    filename = components[-1]
+
+    return string_between(filename, '-', '.tgz')
+
+def extract_packed_name(url):
+    components = url.split('/')
+
+    filename = components[-1]
+
+    return filename
 
 def safe_mkdir(dir_path):
 
@@ -17,6 +42,11 @@ def sys_command(args):
 #    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p = subprocess.Popen(args)
     p.wait()
+
+def download_and_save(url, filename):
+    
+     urllib.urlretrieve(url, filename)
+
 
 
 class BuildDir(object):

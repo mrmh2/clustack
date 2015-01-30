@@ -8,9 +8,10 @@ import argparse
 import importlib
 
 from clustack.builder import Builder
-from clustack.create import generate_builder
+from clustack.create import generate_yaml_builder
 from clustack.utils import sys_command
 from clustack import settings
+from clustack.yamlbuilder import builder_from_yaml
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
@@ -26,7 +27,7 @@ def list_packages(args):
 
     print '\t'.join(builder_files)
 
-def install_package(args):
+def install_from_import(args):
 
     module = importlib.import_module(args.name)
 
@@ -37,10 +38,20 @@ def install_package(args):
             if name not in other_classes:
                 loaded_builder = obj()
                 loaded_builder.install()
+
+def install_package(args):
+
+    name = args.name
+
+    yaml_path = os.path.join('yaml', name + '.yaml')
+
+    yaml_builder = builder_from_yaml(yaml_path)
+
+    yaml_builder.process_all_stages()
     
 def create_builder(args):
 
-    generate_builder(args.name, args.url)
+    generate_yaml_builder(args.name, args.url)
 
 def edit_builder(args):
     name = args.name

@@ -1,4 +1,11 @@
-TEMPLATE = """from clustack.builder import Builder
+
+import os
+
+from utils import sys_command
+
+import settings
+
+PYTHON_TEMPLATE = """from clustack.builder import Builder
 
 class {}Builder(Builder):
     def __init__(self):
@@ -8,16 +15,15 @@ class {}Builder(Builder):
 
 """
 
-import os
+YAML_TEMPLATE = """name: {}
+url : {}
+version : {}
+"""
 
-from utils import sys_command
-
-import settings
-
-def generate_builder(name, url):
+def generate_python_builder(name, url):
     version = "1.0.0"
 
-    template_contents = TEMPLATE.format(
+    template_contents = PYTHON_TEMPLATE.format(
         name,
         url,
         name,
@@ -29,6 +35,27 @@ def generate_builder(name, url):
     filename = name.lower() + '.py'
 
     full_path_name = os.path.join(builder_dir, filename)
+
+    with open(full_path_name, 'w') as f:
+        f.write(template_contents)
+
+    sys_command(['vim', full_path_name])
+
+def generate_yaml_builder(name, url):
+    version = "1.0.0"
+
+    template_contents = YAML_TEMPLATE.format(
+        name,
+        url,
+        version
+    )
+
+    # FIXME
+    yaml_dir = os.path.join(os.getcwd(), 'yaml')
+
+    filename = name.lower() + '.yaml'
+
+    full_path_name = os.path.join(yaml_dir, filename)
 
     with open(full_path_name, 'w') as f:
         f.write(template_contents)
