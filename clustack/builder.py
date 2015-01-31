@@ -227,9 +227,19 @@ source and build are by default the same directory."""
             self.system(['cmake', cmake_flags, '..'])
             return
 
+        if 'Makefile' in source_root_files:
+            # We don't need to configure, hopefully
+            return
+
         raise BuilderError('No configure strategy for this package')
 
     def build(self):
+        try:
+            self.user_build(self)
+        except AttributeError:
+            self._build()
+
+    def _build(self):
         """Build the software."""
 
         os.chdir(self.build_dir)
@@ -237,6 +247,12 @@ source and build are by default the same directory."""
         self.system('make')
 
     def install(self):
+        try:
+            self.user_install(self)
+        except AttributeError:
+            self._install()
+            
+    def _install(self):
         """Install to the builder's specified install directory"""
 
         os.chdir(self.build_dir)
