@@ -273,9 +273,14 @@ source and build are by default the same directory."""
             self.download()
         if not self.check_stage_finished("UNPACK"):
             self.unpack()
-        self.configure()
-        self.build()
-        self.install()
+
+        # TODO - this seems a nasty way to do this
+        try:
+            self.user_allscript(self)
+        except AttributeError:
+            self.configure()
+            self.build()
+            self.install()
 
     # def link_from_subdir(self, subdir_name, dest_dir):
     #     """Link files in a particular subdirectory of the compiled package (e.g.

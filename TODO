@@ -1,7 +1,15 @@
-* Move all generated files into a subdirectory. 
+## Prio
+* Linking!
+
+## Other
+* Stage management database/file
 * Generate a sourceable bash script.
 * Better name than packages.
 * Fix module import to work more nicely.
-* Easy template creation
-* Fix use of sys_command in existing build scripts
 * Dependencies
+* User defined actions as either single line or list
+
+## DONE
+* DONE Easy template creation
+* DONE Fix use of sys_command in existing build scripts
+* DONE Move all generated files into a subdirectory. 

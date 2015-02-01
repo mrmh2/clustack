@@ -3,3 +3,4 @@ url : https://pypi.python.org/packages/source/s/setuptools/setuptools-5.4.2.tar.
 version : 5.4.2
 dependencies:
  - python
+allscript: python ez_setup.py

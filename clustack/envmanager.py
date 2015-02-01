@@ -19,7 +19,7 @@ class EnvManager(object):
 
     def add_path(self, path):
         """Add new path to internal path list and rebuild path"""
-        self.path_list.append(path)
+        self.path_list.insert(0, path)
         self.build_path()
 
     def run_command(self, command):
