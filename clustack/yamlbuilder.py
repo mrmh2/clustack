@@ -78,10 +78,11 @@ def builder_from_yaml(yaml_file):
         yamlBuilder.user_configure = user_configure
 
     if 'dependencies' in yaml_rep:
-        python_dep = builder_by_name_yaml('python')
-        bin_dir = os.path.join(python_dep.install_dir, 'bin')
-        yamlBuilder.env_manager.add_path(bin_dir)
-        yamlBuilder.system(['which', 'python'])
+        for dependency in yaml_rep['dependencies']:
+            python_dep = builder_by_name_yaml(dependency)
+            bin_dir = os.path.join(python_dep.install_dir, 'bin')
+            yamlBuilder.env_manager.add_path(bin_dir)
+            yamlBuilder.system(['which', 'python'])
 
     if 'allscript' in yaml_rep:
         def user_allscript(self):
@@ -92,11 +93,18 @@ def builder_from_yaml(yaml_file):
 
         yamlBuilder.user_allscript = user_allscript
 
+    if 'python_package' in yaml_rep:
+        package_name = yaml_rep['python_package']
+        def subpackage(self):
+            install_command = ['easy_install', package_name]
+            self.system(install_command)
+
+        yamlBuilder.subpackage = subpackage
 
     return yamlBuilder
 
 def main():
-    builder_from_yaml('yaml/setuptools.yaml')
+    builder_from_yaml('yaml/pip.yaml')
     #builder_from_yaml('yaml/perl.yaml')
 
 if __name__ == '__main__':

@@ -269,6 +269,13 @@ source and build are by default the same directory."""
         self.system(['make', 'install'])
 
     def process_all_stages(self):
+
+        try:
+            self.subpackage(self)
+            return
+        except AttributeError:
+            pass
+
         if not self.check_stage_finished("DOWNLOAD"):
             self.download()
         if not self.check_stage_finished("UNPACK"):
