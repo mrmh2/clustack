@@ -169,6 +169,7 @@ source and build are by default the same directory."""
     def system(self, command):
         """Run the given command using our internal managed environment"""
 
+        # TODO logging
         return self.env_manager.run_command(command)
 
     def download(self):
@@ -207,7 +208,7 @@ source and build are by default the same directory."""
         # if not len(os.listdir(self.source_dir)):
         #     sys_command(['tar', '-xf', full_packed_name, '-C', self.source_dir])
 
-    def configure(self):
+    def _configure(self):
         """Configure build process."""
 
         if self.build_in_source:
@@ -232,6 +233,12 @@ source and build are by default the same directory."""
             return
 
         raise BuilderError('No configure strategy for this package')
+
+    def configure(self):
+        try:
+            self.user_configure(self)
+        except AttributeError:
+            self._configure()
 
     def build(self):
         try:
@@ -262,8 +269,10 @@ source and build are by default the same directory."""
         self.system(['make', 'install'])
 
     def process_all_stages(self):
-        self.download()
-        self.unpack()
+        if not self.check_stage_finished("DOWNLOAD"):
+            self.download()
+        if not self.check_stage_finished("UNPACK"):
+            self.unpack()
         self.configure()
         self.build()
         self.install()

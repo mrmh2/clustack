@@ -46,15 +46,26 @@ def builder_from_yaml(yaml_file):
 
         yamlBuilder.user_install = user_install
 
+    if 'configure' in yaml_rep:
+        def user_configure(self):
+            os.chdir(self.build_dir)
+            for command in yaml_rep['configure']:
+                configure_command = Template(command)
+                spaced_command = configure_command.substitute(var_list).split(" ")
+                self.system(spaced_command)
 
+        yamlBuilder.user_configure = user_configure
 
+    # DOING - dependency path manipulation
 
+    #yamlBuilder.system(['which', 'python'])
 
 
     return yamlBuilder
 
 def main():
-    builder_from_yaml('yaml/htslib.yaml')
+    #builder_from_yaml('yaml/setuptools.yaml')
+    builder_from_yaml('yaml/perl.yaml')
 
 if __name__ == '__main__':
     main()

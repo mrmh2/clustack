@@ -1,0 +1,6 @@
+name: perl
+url : http://www.cpan.org/src/5.0/perl-5.20.1.tar.gz
+version : 5.20.1
+
+configure :
+    - ./Configure -Dprefix=$prefix -dres

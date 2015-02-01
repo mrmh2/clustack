@@ -1,0 +1,5 @@
+name: setuptools
+url : https://pypi.python.org/packages/source/s/setuptools/setuptools-5.4.2.tar.gz
+version : 5.4.2
+dependencies:
+ - python
