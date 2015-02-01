@@ -1,0 +1,6 @@
+name: perl-moose
+url : none
+version : 1.0.0
+perl_package : Moose
+dependencies : 
+    - perl

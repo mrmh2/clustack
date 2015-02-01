@@ -1,0 +1,7 @@
+name: pip
+url : none
+version : 1.0.0
+dependencies:
+    - python
+    - setuptools
+python_package: pip

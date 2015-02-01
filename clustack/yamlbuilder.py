@@ -101,10 +101,20 @@ def builder_from_yaml(yaml_file):
 
         yamlBuilder.subpackage = subpackage
 
+    if 'perl_package' in yaml_rep:
+        package_name = yaml_rep['perl_package']
+        def subpackage(self):
+            install_command = ['cpan', package_name]
+            self.system(install_command)
+
+        yamlBuilder.subpackage = subpackage
+
+
+    yamlBuilder.system(['which', 'cpan'])
     return yamlBuilder
 
 def main():
-    builder_from_yaml('yaml/pip.yaml')
+    builder_from_yaml('yaml/perl-moose.yaml')
     #builder_from_yaml('yaml/perl.yaml')
 
 if __name__ == '__main__':

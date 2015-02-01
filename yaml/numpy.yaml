@@ -1,0 +1,7 @@
+name: numpy
+url : None
+version : 1.0.0
+dependencies :
+    - pip
+    - python
+python_package : numpy
