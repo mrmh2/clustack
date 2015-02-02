@@ -17,11 +17,13 @@ package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
 def list_packages(args):
 
-    all_files = os.listdir(package_dir)
+    yaml_ext = settings.yaml_ext
+
+    all_files = os.listdir(settings.yaml_dir)
 
     split_names = [os.path.splitext(f) for f in all_files]
 
-    builder_files = [name for name, ext in split_names if ext == '.py']
+    builder_files = [name for name, ext in split_names if ext == yaml_ext]
 
     builder_files.sort()
 

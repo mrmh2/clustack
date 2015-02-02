@@ -12,3 +12,4 @@ if shelf_dir == "CWD":
 #shelf_dir = os.path.join(os.getcwd(), 'shelf')
 
 yaml_dir = os.path.join(os.getcwd(), 'yaml')
+yaml_ext = '.yaml'

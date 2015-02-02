@@ -41,6 +41,7 @@ def handle_dependencies(yamlBuilder, yaml_rep):
     * Add bin to PATH
     * Add include to CPATH
     * Add lib to LIBRARY_PATH
+    * Add pkgconfig to PKG_CONFIG_PATH
     """
 
     for dependency in yaml_rep['dependencies']:
@@ -55,7 +56,12 @@ def handle_dependencies(yamlBuilder, yaml_rep):
             builder_dep.process_all_stages()
 
         yamlBuilder.env_manager.add_to_pathvar('CPATH', builder_dep.include_dir)
-        yamlBuilder.env_manager.add_to_pathvar('LIBRARY_PATH', builder_dep.lib_dir)
+        yamlBuilder.env_manager.add_to_pathvar('LIBRARY_PATH', 
+                                               builder_dep.lib_dir)
+        pkgconfig_dir = builder_dep.pkgconfig_dir
+        if pkgconfig_dir:
+            yamlBuilder.env_manager.add_to_pathvar('PKG_CONFIG_PATH', 
+                                                   builder_dep.pkgconfig_dir)
 
         bin_dir = os.path.join(builder_dep.install_dir, 'bin')
         yamlBuilder.env_manager.add_path(bin_dir)
@@ -77,6 +83,9 @@ def builder_from_yaml(yaml_file):
 
     var_list = { 'prefix' : yamlBuilder.install_dir,
                  'version' : yamlBuilder.version,
+                 'libdir' : yamlBuilder.lib_dir,
+                 'includedir' : yamlBuilder.include_dir,
+                 'installdir' : yamlBuilder.install_dir,
                  'name' : yamlBuilder.name}
 
     if 'dependencies' in yaml_rep:
@@ -85,9 +94,15 @@ def builder_from_yaml(yaml_file):
     if 'build' in yaml_rep:
         def user_build(self):
             os.chdir(self.build_dir)
-
             for command in yaml_rep['build']:
-                self.system(command)
+                template_command = Template(command)
+                try:
+                    spaced_command = template_command.substitute(var_list).split(" ")
+                except KeyError, e:
+                    print "Error parsing yaml file, parameter ${}".format(e.args[0])
+                    sys.exit(1)
+
+                self.system(spaced_command)
 
         yamlBuilder.user_build = user_build
 

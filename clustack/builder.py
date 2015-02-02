@@ -122,6 +122,17 @@ source and build are by default the same directory."""
         return os.path.join(self.install_dir, 'lib')
 
     @property
+    def pkgconfig_dir(self):
+        """Directory in which pkg-config files exist, if any."""
+
+        pkgconfig_dir = os.path.join(self.lib_dir, 'pkgconfig')
+
+        if os.path.exists(pkgconfig_dir):
+            return pkgconfig_dir
+        else:
+            return None
+
+    @property
     def version(self):
         """If we've already set our version, return that. Otherwise, raise
         an exception"""

@@ -1,0 +1,6 @@
+name : bedtools
+url : https://github.com/arq5x/bedtools2/releases/download/v2.22.0/bedtools-2.22.0.tar.gz
+version : 2.22.0
+
+install :
+    - cp -r bin $installdir

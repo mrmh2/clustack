@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-DEFAULT_PATHS = ['CPATH', 'LIBRARY_PATH', 'LD_LIBRARY_PATH']
+DEFAULT_PATHS = ['CPATH', 'LIBRARY_PATH', 'LD_LIBRARY_PATH', 'PKG_CONFIG_PATH']
 
 class PathlikeVariable(object):
     """Manage variables like PATH, which have an ordered list of components from
