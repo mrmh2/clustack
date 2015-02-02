@@ -1,6 +1,7 @@
 """Parse yaml files and turn them into builders"""
 
 import os
+import sys
 import yaml
 from string import Template
 
@@ -26,9 +27,39 @@ def builder_by_name_yaml(name):
     yaml_dir = settings.yaml_dir
     yaml_ext = '.yaml'
 
+    name = name.lower()
+
     if name in yaml_builders_in_path(yaml_dir):
         filename = os.path.join(yaml_dir, name + yaml_ext)
         return builder_from_yaml(filename)
+
+def handle_dependencies(yamlBuilder, yaml_rep):
+    """Scan yaml_rep for dependencies. If they exist, check whether they are
+    installed. If not, attempt to install. Once installed, add the relevant
+    directories to necessary environment variables, in particular:
+
+    * Add bin to PATH
+    * Add include to CPATH
+    * Add lib to LIBRARY_PATH
+    """
+
+    for dependency in yaml_rep['dependencies']:
+        builder_dep = builder_by_name_yaml(dependency)
+
+        if builder_dep is None:
+            raise Exception('Unknown dependency {}'.format(dependency))
+
+        dep_installed = builder_dep.check_stage_finished("INSTALL")
+
+        if not dep_installed:
+            builder_dep.process_all_stages()
+
+        yamlBuilder.env_manager.add_to_pathvar('CPATH', builder_dep.include_dir)
+        yamlBuilder.env_manager.add_to_pathvar('LIBRARY_PATH', builder_dep.lib_dir)
+
+        bin_dir = os.path.join(builder_dep.install_dir, 'bin')
+        yamlBuilder.env_manager.add_path(bin_dir)
+        yamlBuilder.system(['which', 'python'])
 
 def builder_from_yaml(yaml_file):
 
@@ -47,6 +78,9 @@ def builder_from_yaml(yaml_file):
     var_list = { 'prefix' : yamlBuilder.install_dir,
                  'version' : yamlBuilder.version,
                  'name' : yamlBuilder.name}
+
+    if 'dependencies' in yaml_rep:
+        handle_dependencies(yamlBuilder, yaml_rep)
 
     if 'build' in yaml_rep:
         def user_build(self):
@@ -67,6 +101,9 @@ def builder_from_yaml(yaml_file):
 
         yamlBuilder.user_install = user_install
 
+    if 'configure_opts' in yaml_rep:
+        yamlBuilder.configure_opts = yaml_rep['configure_opts']
+
     if 'configure' in yaml_rep:
         def user_configure(self):
             os.chdir(self.build_dir)
@@ -77,12 +114,6 @@ def builder_from_yaml(yaml_file):
 
         yamlBuilder.user_configure = user_configure
 
-    if 'dependencies' in yaml_rep:
-        for dependency in yaml_rep['dependencies']:
-            python_dep = builder_by_name_yaml(dependency)
-            bin_dir = os.path.join(python_dep.install_dir, 'bin')
-            yamlBuilder.env_manager.add_path(bin_dir)
-            yamlBuilder.system(['which', 'python'])
 
     if 'allscript' in yaml_rep:
         def user_allscript(self):
@@ -114,8 +145,9 @@ def builder_from_yaml(yaml_file):
     return yamlBuilder
 
 def main():
-    builder_from_yaml('yaml/perl-moose.yaml')
+    #builder_from_yaml(sys.argv[1])
     #builder_from_yaml('yaml/perl.yaml')
+    builder_by_name_yaml(sys.argv[1])
 
 if __name__ == '__main__':
     main()

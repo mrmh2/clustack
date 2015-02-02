@@ -1,0 +1,5 @@
+name: readline
+url : http://ftpmirror.gnu.org/readline/readline-6.3.tar.gz
+version : 6.3
+dependencies :
+    - ncurses

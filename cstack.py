@@ -11,7 +11,7 @@ from clustack.builder import Builder
 from clustack.create import generate_yaml_builder
 from clustack.utils import sys_command
 from clustack import settings
-from clustack.yamlbuilder import builder_from_yaml
+from clustack.yamlbuilder import builder_by_name_yaml
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
@@ -43,9 +43,9 @@ def install_package(args):
 
     name = args.name
 
-    yaml_path = os.path.join('yaml', name + '.yaml')
+    #yaml_path = os.path.join('yaml', name + '.yaml')
 
-    yaml_builder = builder_from_yaml(yaml_path)
+    yaml_builder = builder_by_name_yaml(name)
 
     yaml_builder.process_all_stages()
     

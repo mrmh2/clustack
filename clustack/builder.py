@@ -106,6 +106,22 @@ source and build are by default the same directory."""
         return os.path.join(self.shelf_dir, 'x86_64')
 
     @property
+    def include_dir(self):
+        """Directory in which installed package headers live. Of the form:
+
+        base_dir/package_name/package_version/x86_64/include"""
+
+        return os.path.join(self.install_dir, 'include')
+
+    @property
+    def lib_dir(self):
+        """Directory in which installed package libraries live. Of the form:
+
+        base_dir/package_name/package_version/x86_64/lib"""
+
+        return os.path.join(self.install_dir, 'lib')
+
+    @property
     def version(self):
         """If we've already set our version, return that. Otherwise, raise
         an exception"""
@@ -148,8 +164,14 @@ source and build are by default the same directory."""
             return os.path.exists(makefile_path)
 
         if stage_name == "INSTALL":
-            
-            installed_files = os.listdir(self.install_dir)
+
+            try:
+                installed_files = os.listdir(self.install_dir)
+            except OSError, e:
+                if e.errno == errno.ENOENT:
+                    return False
+                else:
+                    raise
 
             return len(installed_files) > 0
 
@@ -219,8 +241,15 @@ source and build are by default the same directory."""
 
         source_root_files = os.listdir(self.source_dir)
 
+        try:
+            configure_opts = self.configure_opts
+        except AttributeError:
+            configure_opts = ""
+
         if 'configure' in source_root_files:
-            self.system(['./configure', '--prefix={}'.format(self.install_dir)])
+            self.system(['./configure', 
+                         '{}'.format(configure_opts),
+                         '--prefix={}'.format(self.install_dir)])
             return
 
         if 'CMakeLists.txt' in source_root_files:

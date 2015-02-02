@@ -1,29 +1,58 @@
 import os
 import subprocess
 
-class EnvManager(object):
-    """Manage UNIX environment variables for specific building"""
+DEFAULT_PATHS = ['CPATH', 'LIBRARY_PATH', 'LD_LIBRARY_PATH']
 
-    def __init__(self):
+class PathlikeVariable(object):
+    """Manage variables like PATH, which have an ordered list of components from
+    which items can be removed or added, and are represented in environments as
+    a colon delimited string."""
+
+    def  __init__(self, name, env):
+        try:
+            self.item_list = env[name].split(':')
+        except KeyError:
+            self.item_list = []
+            
+    def add_path(self, path):
+        self.item_list.insert(0, path)
+
+    def __str__(self):
+        return ':'.join(self.item_list)
+        
+class EnvManager(object):
+    """Manage UNIX environment variables for specific building."""
+
+    def __init__(self, pathvars_to_manage=DEFAULT_PATHS):
         self.start_env = os.environ.copy()
         self.path_list = self.start_env['PATH'].split(':')
         self.my_env = self.start_env
+        #self.cpath_list = self.init_pathlike_variable('CPATH')
+        
+        self.pathvars = {pathvar : PathlikeVariable(pathvar, self.my_env)
+                         for pathvar in pathvars_to_manage}
+
+    def add_to_pathvar(self, var_name, path):
+        self.pathvars[var_name].add_path(path)
+
+        self.my_env[var_name] = str(self.pathvars[var_name])
 
     def dump(self):
         print self.my_env
 
     def build_path(self):
-        """Generate environment path setting from internal path list"""
+        """Generate environment path setting from internal path list."""
 
         self.my_env["PATH"] = ':'.join(self.path_list)
 
+
     def add_path(self, path):
-        """Add new path to internal path list and rebuild path"""
+        """Add new path to internal path list and rebuild path."""
         self.path_list.insert(0, path)
         self.build_path()
 
     def run_command(self, command):
-        """Run a command with our internal environment"""
+        """Run a command with our internal environment."""
         p = subprocess.Popen(command, env=self.my_env)
         p.wait()
 
@@ -37,7 +66,7 @@ class EnvManager(object):
         if name in self.my_env:
             return self.my_env[name]
         
-        raise AttributeError
+        raise AttributeError('No variable in environment: {}'.format(name))
 
 def test_env_manager():
 
