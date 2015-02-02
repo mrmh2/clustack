@@ -3,7 +3,8 @@ import ConfigParser
 
 config = ConfigParser.ConfigParser()
 
-config.read('config/settings.cfg')
+user_config = os.path.expanduser('~/.clustack/settings.cfg')
+config.read([user_config, 'config/settings.cfg'])
 
 shelf_dir = config.get('Path settings', 'shelf_dir')
 

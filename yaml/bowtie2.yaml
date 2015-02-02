@@ -1,3 +1,7 @@
 name: bowtie2
 url : https://github.com/BenLangmead/bowtie2/archive/v2.2.4.tar.gz
 version : 2.2.4
+
+install:
+  - mkdir $installdir/bin
+  - cp bowtie2 $installdir/bin
