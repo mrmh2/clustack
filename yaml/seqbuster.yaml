@@ -1,0 +1,8 @@
+name: seqbuster
+url : https://github.com/lpantano/seqbuster.git
+version : 1.0.0
+
+dependencies:
+    - bowtie2
+    - bedtools
+    - python-pybedtools

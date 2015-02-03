@@ -1,0 +1,8 @@
+name: pybedtools
+url : None
+version : 1.0.0
+dependencies :
+    - pip
+    - python
+    - python-cython
+python_package : pybedtools
