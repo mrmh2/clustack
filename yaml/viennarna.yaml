@@ -1,0 +1,6 @@
+name: viennaRNA
+url : http://www.tbi.univie.ac.at/~ronny/RNA/packages/source/ViennaRNA-2.1.8.tar.gz
+version : 2.1.8
+
+dependencies :
+    - perl

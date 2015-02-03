@@ -1,10 +1,16 @@
 import os
+import sys
 import ConfigParser
 
 config = ConfigParser.ConfigParser()
 
 user_config = os.path.expanduser('~/.clustack/settings.cfg')
-config.read([user_config, 'config/settings.cfg'])
+# Last file in list overrides
+read_files = config.read(['config/settings.cfg', user_config])
+
+if not len(read_files):
+    print "Error reading setting"
+    sys.exit(0)
 
 shelf_dir = config.get('Path settings', 'shelf_dir')
 
