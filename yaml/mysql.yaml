@@ -1,0 +1,9 @@
+name: mysql
+url : http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.23.tar.gz
+version : 5.6.23
+
+use_build_dir : True
+
+dependencies :
+    - openssl
+    - cmake

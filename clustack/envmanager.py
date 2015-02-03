@@ -68,6 +68,14 @@ class EnvManager(object):
         
         raise AttributeError('No variable in environment: {}'.format(name))
 
+    def update_CPPFLAGS(self):
+        self.my_env['CPPFLAGS'] = ' '.join('-I' + s 
+                                           for s in self.CPATH.split(":"))
+
+    def update_LDFLAGS(self):
+        self.my_env['LDFLAGS'] = ' '.join('-L' + s 
+                                          for s in self.LIBRARY_PATH.split(":"))
+
 def test_env_manager():
 
     myenv = EnvManager()

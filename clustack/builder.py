@@ -22,6 +22,9 @@ from envmanager import EnvManager
 #     print("*** Break ***")
 #     sys.exit(0)
 
+def willlog(message):
+    print message
+
 builder_stages = [ "DOWNLOAD",
                    "UNPACK",
                    "CONFIGURE",
@@ -160,6 +163,7 @@ source and build are by default the same directory."""
             return os.path.exists(self.archive_file_path)
 
         if stage_name == "UNPACK":
+            willlog("Check unpack {}".format(self.name))
             if not os.path.exists(self.source_dir):
                 return False
 
@@ -236,6 +240,8 @@ source and build are by default the same directory."""
 
         shutil.move(unpack_path, self.source_dir)
 
+        if 'CMakeLists.txt' in os.listdir(self.source_dir):
+            self.build_in_source = False
 
         # # Unpack only if we haven't done so already
         # if not len(os.listdir(self.source_dir)):
@@ -258,14 +264,17 @@ source and build are by default the same directory."""
             configure_opts = ""
 
         if 'configure' in source_root_files:
-            self.system(['./configure', 
-                         '{}'.format(configure_opts),
-                         '--prefix={}'.format(self.install_dir)])
+            configure_command = ['./configure', '--prefix={}'.format(self.install_dir)]
+            if configure_opts is not "":
+                configure_command += ['{}'.format(configure_opts)]
+            self.system(configure_command)
             return
 
         if 'CMakeLists.txt' in source_root_files:
+            safe_mkdir(self.build_dir)
+            os.chdir(self.build_dir)
             cmake_flags = "-DCMAKE_INSTALL_PREFIX:PATH={}".format(self.install_dir)
-            self.system(['cmake', cmake_flags, '..'])
+            self.system(['cmake', cmake_flags, self.source_dir])
             return
 
         if 'Makefile' in source_root_files:

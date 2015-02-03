@@ -41,7 +41,11 @@ def handle_dependencies(yamlBuilder, yaml_rep):
     * Add bin to PATH
     * Add include to CPATH
     * Add lib to LIBRARY_PATH
+    * Add lib to LD_LIBRARY_PATH
     * Add pkgconfig to PKG_CONFIG_PATH
+
+    After updating paths, set CPPFLAGS and LDFLAGS appropriately. This will
+    overwrite existing values.
     """
 
     for dependency in yaml_rep['dependencies']:
@@ -58,6 +62,9 @@ def handle_dependencies(yamlBuilder, yaml_rep):
         yamlBuilder.env_manager.add_to_pathvar('CPATH', builder_dep.include_dir)
         yamlBuilder.env_manager.add_to_pathvar('LIBRARY_PATH', 
                                                builder_dep.lib_dir)
+        yamlBuilder.env_manager.add_to_pathvar('LD_LIBRARY_PATH', 
+                                               builder_dep.lib_dir)
+
         pkgconfig_dir = builder_dep.pkgconfig_dir
         if pkgconfig_dir:
             yamlBuilder.env_manager.add_to_pathvar('PKG_CONFIG_PATH', 
@@ -66,6 +73,9 @@ def handle_dependencies(yamlBuilder, yaml_rep):
         bin_dir = os.path.join(builder_dep.install_dir, 'bin')
         yamlBuilder.env_manager.add_path(bin_dir)
         yamlBuilder.system(['which', 'python'])
+
+    yamlBuilder.env_manager.update_CPPFLAGS()
+    yamlBuilder.env_manager.update_LDFLAGS()
 
 def builder_from_yaml(yaml_file):
 
@@ -90,6 +100,10 @@ def builder_from_yaml(yaml_file):
 
     if 'dependencies' in yaml_rep:
         handle_dependencies(yamlBuilder, yaml_rep)
+
+    if 'build_in_source' in yaml_rep:
+        if yaml_rep['use_build_dir'] is 'True':
+            yamlBuilder.build_in_source = False
 
     if 'build' in yaml_rep:
         def user_build(self):
@@ -156,7 +170,6 @@ def builder_from_yaml(yaml_file):
         yamlBuilder.subpackage = subpackage
 
 
-    yamlBuilder.system(['which', 'cpan'])
     return yamlBuilder
 
 def main():
