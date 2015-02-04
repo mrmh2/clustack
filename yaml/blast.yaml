@@ -1,0 +1,14 @@
+name: blast
+url : ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.2.30/ncbi-blast-2.2.30+-src.tar.gz
+version : 2.2.30
+
+dependencies :
+    - boost
+
+configure :
+    - ls
+    - ./configure --prefix=$prefix
+
+build :
+    - cd c++
+    - make

@@ -1,5 +1,7 @@
 ## Prio
 * Linking!
+* Variable expansion of other builders
+* File hackery
 
 ## Other
 * Do something for cpan for perl.
@@ -7,11 +9,11 @@
 * Generate a sourceable bash script.
 * Better name than packages.
 * Fix module import to work more nicely.
-* Dependencies
 * User defined actions as either single line or list
 * Testing
 
 ## DONE
+* DONE Dependencies
 * DONE Easy template creation
 * DONE Fix use of sys_command in existing build scripts
 * DONE Move all generated files into a subdirectory. 

@@ -363,12 +363,3 @@ source and build are by default the same directory."""
 
     #     # safe_mkdir(bin_dir)
 
-    # def install(self):
-    #     self.env_manager = EnvManager()
-    #     self.env_manager.set_variable('CPATH', include_dir)
-    #     self.env_manager.set_variable('LIBRARY_PATH', lib_dir)
-
-    #     self.cached_fetch()
-    #     self.unpack()
-    #     self.build()
-    #     self.link()

@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 
 DEFAULT_PATHS = ['CPATH', 'LIBRARY_PATH', 'LD_LIBRARY_PATH', 'PKG_CONFIG_PATH']
@@ -53,7 +54,13 @@ class EnvManager(object):
 
     def run_command(self, command):
         """Run a command with our internal environment."""
-        p = subprocess.Popen(command, env=self.my_env)
+        try:
+            p = subprocess.Popen(command, env=self.my_env)
+        except OSError, e:
+            print "OSError", e
+            print "Command was ", command
+            sys.exit(2)
+
         p.wait()
 
         return p.returncode

@@ -1,0 +1,10 @@
+name: gcc
+url : http://ftpmirror.gnu.org/gcc/gcc-4.9.2/gcc-4.9.2.tar.bz2
+version : 4.9.2
+
+configure_opts : --disable-multilib
+
+dependencies :
+    - mpc
+    - mpfr
+    - gmp

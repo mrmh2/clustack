@@ -1,0 +1,7 @@
+name: mpc
+url : http://ftpmirror.gnu.org/mpc/mpc-1.0.2.tar.gz
+version : 1.0.2
+
+dependencies :
+    - mpfr
+    - gmp
