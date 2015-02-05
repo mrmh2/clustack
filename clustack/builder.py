@@ -209,6 +209,11 @@ source and build are by default the same directory."""
         # TODO logging
         return self.env_manager.run_command(command)
 
+    def check_output(self, command):
+        """Run the given command with our managed environment and return output"""
+
+        return self.env_manager.check_output(command)
+
     def download(self):
         """Fetch the package source from its URL and save it in our source
         directory."""

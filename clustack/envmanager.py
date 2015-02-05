@@ -65,6 +65,18 @@ class EnvManager(object):
 
         return p.returncode
 
+    def check_output(self, command):
+        """Run command with internal environment and return output"""
+
+        try:
+            output = subprocess.check_output(command, env=self.my_env)
+        except CalledProcessError, e:
+            print "Command failed", e
+            print "Command was ", command
+            sys.exit(2)
+
+        return output
+
     def set_variable(self, variable, value):
         self.my_env[variable] = value
 
