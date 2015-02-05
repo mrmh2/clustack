@@ -18,5 +18,12 @@ if shelf_dir == "CWD":
     shelf_dir = os.path.join(os.getcwd(), 'shelf')
 #shelf_dir = os.path.join(os.getcwd(), 'shelf')
 
-yaml_dir = os.path.join(os.getcwd(), 'yaml')
+base_program_dir = os.getcwd()
+
+yaml_dir = os.path.join(base_program_dir, 'yaml')
 yaml_ext = '.yaml'
+
+stack_dir = os.path.join(base_program_dir, 'stack')
+
+blueprint_path = [yaml_dir]
+blueprint_exts = [yaml_ext]

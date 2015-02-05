@@ -1,32 +1,21 @@
-from builder import Builder
-from envmanager import EnvManager
-
-def allsteps():
-    testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz')
-    testBuilder._version = '1.2.8'
-    # testBuilder = Builder('libpng', 'https://downloads.sf.net/project/libpng/libpng16/1.6.15/libpng-1.6.15.tar.xz')
-    # testBuilder._version = '1.6.15'
-
-    # testBuilder = Builder('lesstiff', 'https://downloads.sourceforge.net/project/lesstif/lesstif/0.95.2/lesstif-0.95.2.tar.bz2')
-    # testBuilder._version = '0.95.2'
-
-    testBuilder.download()
-    testBuilder.unpack()
-    testBuilder.configure()
-    testBuilder.build()
-    testBuilder.install()
+import blueprint
+from stack import Stack
+from component import Package
 
 def main():
-    # testBuilder = Builder('zlib', 'http://zlib.net/zlib-1.2.8.tar.gz', False)
-    # testBuilder._version = "1.2.8"
+    s = Stack()
+    print s
 
-    # print testBuilder.build_dir
+    #print s.env_manager
 
-    # myenv = EnvManager()
+    p_ncurses = Package('python')
 
-    # print myenv.PATH
+    s.add_component(p_ncurses)
+    s.add_component(Package('gcc'))
 
-    allsteps()
+    #print s.env_manager
+
+    s.shell()
 
 if __name__ == "__main__":
     main()

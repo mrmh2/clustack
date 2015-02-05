@@ -117,6 +117,14 @@ source and build are by default the same directory."""
         return os.path.join(self.install_dir, 'include')
 
     @property
+    def bin_dir(self):
+        """Directory in which installed package binaries live. Of the form:
+        
+        base_dir/package_name/package_version/x86_64/bin"""
+
+        return os.path.join(self.install_dir, 'bin')
+
+    @property
     def lib_dir(self):
         """Directory in which installed package libraries live. Of the form:
 

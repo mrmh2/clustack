@@ -1,8 +1,10 @@
 import os
 import sys
+import pprint
 import subprocess
 
-DEFAULT_PATHS = ['CPATH', 'LIBRARY_PATH', 'LD_LIBRARY_PATH', 'PKG_CONFIG_PATH']
+
+DEFAULT_PATHS = ['CPATH', 'LIBRARY_PATH', 'LD_LIBRARY_PATH', 'PKG_CONFIG_PATH', 'PATH']
 
 class PathlikeVariable(object):
     """Manage variables like PATH, which have an ordered list of components from
@@ -94,6 +96,12 @@ class EnvManager(object):
     def update_LDFLAGS(self):
         self.my_env['LDFLAGS'] = ' '.join('-L' + s 
                                           for s in self.LIBRARY_PATH.split(":"))
+
+    def shell(self):
+        subprocess.call('bash', env=self.my_env)
+
+    def __repr__(self):
+        return pprint.pformat(self.my_env)
 
 def test_env_manager():
 

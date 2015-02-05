@@ -20,7 +20,7 @@ def yaml_builders_in_path(path):
 
     return [basename for basename, ext in all_files if ext == yaml_ext]
 
-def builder_by_name_yaml(name):
+def builder_by_name_yaml(name, load_dependencies=True):
     """Given a name, return a yaml builder of that name, or None if it is
     unavailable"""
 
@@ -31,7 +31,7 @@ def builder_by_name_yaml(name):
 
     if name in yaml_builders_in_path(yaml_dir):
         filename = os.path.join(yaml_dir, name + yaml_ext)
-        return builder_from_yaml(filename)
+        return builder_from_yaml(filename, load_dependencies)
 
 def handle_dependencies(yamlBuilder, yaml_rep):
     """Scan yaml_rep for dependencies. If they exist, check whether they are
@@ -72,12 +72,11 @@ def handle_dependencies(yamlBuilder, yaml_rep):
 
         bin_dir = os.path.join(builder_dep.install_dir, 'bin')
         yamlBuilder.env_manager.add_path(bin_dir)
-        yamlBuilder.system(['which', 'python'])
 
     yamlBuilder.env_manager.update_CPPFLAGS()
     yamlBuilder.env_manager.update_LDFLAGS()
 
-def builder_from_yaml(yaml_file):
+def builder_from_yaml(yaml_file, load_dependencies=True):
 
     with open(yaml_file) as f:
         yaml_rep = yaml.load(f)
@@ -98,8 +97,12 @@ def builder_from_yaml(yaml_file):
                  'installdir' : yamlBuilder.install_dir,
                  'name' : yamlBuilder.name}
 
+    # FIXME - ugly
+
     if 'dependencies' in yaml_rep:
-        handle_dependencies(yamlBuilder, yaml_rep)
+        yamlBuilder.dependencies = yaml_rep['dependencies']
+        if load_dependencies:
+            handle_dependencies(yamlBuilder, yaml_rep)
 
     if 'build_in_source' in yaml_rep:
         if yaml_rep['use_build_dir'] is 'True':
