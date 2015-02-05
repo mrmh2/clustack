@@ -45,6 +45,22 @@ def yaml_rep_by_name(name):
     else:
         return None
 
+def load_stack_by_name(name):
+    filename = name + settings.yaml_ext
+    
+    full_path = os.path.join(settings.stack_dir, filename)
+
+    with open(full_path) as f:
+        stack_yaml_rep = yaml.load(f)
+
+    st = Stack()
+
+    for component_name in stack_yaml_rep['components']:
+        component = load_component_by_name(component_name)
+        st.add_component(component)
+
+    return st
+
 class Stack(object):
 
     def __init__(self):
@@ -60,7 +76,7 @@ class Stack(object):
 
         component.update_stack(self)
 
-        for dependency in component.full_dependencies:
+        for dependency in component.direct_dependencies:
             c_dep = load_component_by_name(dependency)
             self.add_component(c_dep)
 

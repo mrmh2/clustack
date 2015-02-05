@@ -98,18 +98,8 @@ class EnvManager(object):
                                           for s in self.LIBRARY_PATH.split(":"))
 
     def shell(self):
-        subprocess.call('bash', env=self.my_env)
+        subprocess.call(['bash', '--norc'], env=self.my_env)
 
     def __repr__(self):
         return pprint.pformat(self.my_env)
 
-def test_env_manager():
-
-    myenv = EnvManager()
-
-    myenv.add_path('/usr/bin')
-    myenv.add_path('/bin')
-
-    myenv.dump()
-
-    myenv.run_command('ls')

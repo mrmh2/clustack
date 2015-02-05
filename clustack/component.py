@@ -36,3 +36,7 @@ class Package(Component):
     @property
     def full_dependencies(self):
         return self.blueprint.full_dependencies
+
+    @property
+    def direct_dependencies(self):
+        return self.blueprint.direct_dependencies

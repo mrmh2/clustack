@@ -23,7 +23,7 @@ base_program_dir = os.getcwd()
 yaml_dir = os.path.join(base_program_dir, 'yaml')
 yaml_ext = '.yaml'
 
-stack_dir = os.path.join(base_program_dir, 'stack')
+stack_dir = os.path.join(base_program_dir, 'stacks')
 
 blueprint_path = [yaml_dir]
 blueprint_exts = [yaml_ext]
