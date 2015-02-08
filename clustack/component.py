@@ -15,6 +15,10 @@ class Package(Component):
         self.builder = builder_by_name_yaml(name, load_dependencies=False)
 
     @property
+    def source_dir(self):
+        return self.builder.source_dir
+        
+    @property
     def bin_dir(self):
         return self.builder.bin_dir
 
