@@ -1,8 +1,46 @@
 import os
 
-from yamlbuilder import builder_by_name_yaml
-from blueprint import load_blueprint_by_name
+# from yamlbuilder import builder_by_name_yaml
+# from blueprint import load_blueprint_by_name
 import settings
+
+def package_from_path(path):
+    """Load a package from a filesystem path. Infer the name and version of the
+    package from the path."""
+
+    partial_path, version = os.path.split(path)
+    base_path, name = os.path.split(partial_path)
+
+    p = Package(name, version)
+    p.base_path = path
+
+    return p
+
+class PackageLoader(object):
+    pass
+
+class FileSystemLoader(PackageLoader):
+
+    def __init__(self, base_path=None):
+        if base_path is None:
+            base_path = settings.shelf_dir
+
+        self.base_path = base_path
+
+    def load(self, name):
+
+        partial_path = os.path.join(self.base_path, name)
+
+        versions = os.listdir(partial_path)
+
+        if len(versions) > 1:
+            raise Exception('Cannot handle more than one version of package')
+
+        version = versions[0]
+
+        full_path = os.path.join(partial_path, version)
+
+        return package_from_path(full_path)
 
 def load_component_by_name(name):
     return Package(name)
@@ -31,27 +69,29 @@ class Component(object):
     pass
 
 class Package(Component):
-    def __init__(self, name):
+    def __init__(self, name, version):
         self.name = name
+        self.version = version
+        self.arch = 'x86_64'
 
-        self.blueprint = load_blueprint_by_name(name)
-        self.builder = builder_by_name_yaml(name, load_dependencies=False)
+        # self.blueprint = load_blueprint_by_name(name)
+        # self.builder = builder_by_name_yaml(name, load_dependencies=False)
 
     @property
     def source_dir(self):
-        return self.builder.source_dir
+        return os.path.join(self.base_path, 'source')
         
     @property
     def bin_dir(self):
-        return self.builder.bin_dir
+        return os.path.join(self.base_path, self.arch, 'bin')
 
     @property
     def include_dir(self):
-        return self.builder.include_dir
+        return os.path.join(self.base_path, self.arch, 'include')
 
     @property
     def lib_dir(self):
-        return self.builder.lib_dir
+        return os.path.join(self.base_path, self.arch, 'lib')
 
     def update_stack(self, stack):
 
@@ -67,7 +107,3 @@ class Package(Component):
     @property
     def direct_dependencies(self):
         return self.blueprint.direct_dependencies
-
-    @property
-    def version(self):
-        return self.blueprint.version

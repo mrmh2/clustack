@@ -1,10 +1,12 @@
-import blueprint
-from stack import Stack
-from component import Package
-import component
+from shelf import Shelf
 
 def main():
-    print component.list_packages()
+    s = Shelf()
+
+    all_packages = s.installed_packages
+
+    print all_packages['samtools'].bin_dir
+
 
 if __name__ == "__main__":
     main()
