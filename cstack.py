@@ -12,10 +12,20 @@ from clustack.create import generate_yaml_builder
 from clustack.utils import sys_command
 from clustack import settings
 from clustack.yamlbuilder import builder_by_name_yaml
+from clustack.shelf import Shelf
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
-def list_packages(args):
+def list_installed_packages(args):
+    s = Shelf()
+
+    package_names = s.installed_packages.keys()
+
+    package_names.sort()
+
+    print '\t'.join(package_names)
+
+def available_packages(args):
 
     yaml_ext = settings.yaml_ext
 
@@ -74,8 +84,11 @@ def main():
     subparsers = parser.add_subparsers(help='sub-command help', 
                                         dest='subparser_name')
 
-    parser_list = subparsers.add_parser('list', help='List available software')
-    parser_list.set_defaults(func=list_packages)
+    parser_list = subparsers.add_parser('avail', help='List available software')
+    parser_list.set_defaults(func=available_packages)
+
+    parser_list = subparsers.add_parser('list', help='List installed software')
+    parser_list.set_defaults(func=list_installed_packages)
 
     parser_install = subparsers.add_parser('install', help='Install a package')
     parser_install.add_argument('name')
