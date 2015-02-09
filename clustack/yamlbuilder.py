@@ -8,6 +8,8 @@ from string import Template
 import settings
 from builder import Builder
 from utils import safe_mkdir, sys_command
+from template import load_templated_yaml_rep
+from component import load_all_packages
 
 def yaml_builders_in_path(path):
     """Return list of all yaml builders in the given path. Look through
@@ -24,14 +26,20 @@ def builder_by_name_yaml(name, load_dependencies=True):
     """Given a name, return a yaml builder of that name, or None if it is
     unavailable"""
 
-    yaml_dir = settings.yaml_dir
-    yaml_ext = '.yaml'
+    # yaml_dir = settings.yaml_dir
+    # yaml_ext = '.yaml'
 
-    name = name.lower()
+    # name = name.lower()
 
-    if name in yaml_builders_in_path(yaml_dir):
-        filename = os.path.join(yaml_dir, name + yaml_ext)
-        return builder_from_yaml(filename, load_dependencies)
+    # if name in yaml_builders_in_path(yaml_dir):
+    #     filename = os.path.join(yaml_dir, name + yaml_ext)
+    #     return builder_from_yaml(filename, load_dependencies)
+
+    all_packages = load_all_packages()
+
+    yaml_rep = load_templated_yaml_rep(name, all_packages)
+
+    return builder_from_yaml(yaml_rep, load_dependencies)
 
 def handle_dependencies(yamlBuilder, yaml_rep):
     """Scan yaml_rep for dependencies. If they exist, check whether they are
@@ -76,10 +84,7 @@ def handle_dependencies(yamlBuilder, yaml_rep):
     yamlBuilder.env_manager.update_CPPFLAGS()
     yamlBuilder.env_manager.update_LDFLAGS()
 
-def builder_from_yaml(yaml_file, load_dependencies=True):
-
-    with open(yaml_file) as f:
-        yaml_rep = yaml.load(f)
+def builder_from_yaml(yaml_rep, load_dependencies=True):
 
     url = yaml_rep['url']
     name = yaml_rep['name']
@@ -88,7 +93,7 @@ def builder_from_yaml(yaml_file, load_dependencies=True):
     yamlBuilder = Builder(name, url)
     yamlBuilder._version = str(version)
 
-    print yaml_rep
+    #print yaml_rep
 
     var_list = { 'prefix' : yamlBuilder.install_dir,
                  'version' : yamlBuilder.version,

@@ -1,8 +1,31 @@
+import os
+
 from yamlbuilder import builder_by_name_yaml
 from blueprint import load_blueprint_by_name
+import settings
 
 def load_component_by_name(name):
     return Package(name)
+
+def list_packages():
+    """List all installed packages."""
+
+    shelf_dir = settings.shelf_dir
+
+    package_list = os.listdir(shelf_dir)
+
+    package_list.sort()
+
+    return package_list
+
+def load_all_packages():
+    """Load all installed packages.
+    TODO: Move to environment type object."""
+
+    package_dict = {n : load_component_by_name(n)
+                    for n in list_packages()}
+
+    return package_dict
 
 class Component(object):
     pass
@@ -44,3 +67,7 @@ class Package(Component):
     @property
     def direct_dependencies(self):
         return self.blueprint.direct_dependencies
+
+    @property
+    def version(self):
+        return self.blueprint.version

@@ -5,23 +5,27 @@ import sys
 import yaml
 from jinja2 import FileSystemLoader, Environment, Template
 
-from component import load_component_by_name
+import settings
 
-def templateit(name):
+def load_templated_yaml_rep(name, all_packages):
 
-    p = load_component_by_name('htslib')
+    name = name.lower()
 
-    all_packages = {'htslib' : p}
-
-    tloader = FileSystemLoader('yaml/')
-
+    tloader = FileSystemLoader(settings.yaml_dir)
     tenv = Environment(loader=tloader)
 
-    t = tenv.get_template('samtools.yaml')
+    blueprint_name = name + settings.yaml_ext
 
-    rendered = t.render(packages=all_packages)
+    t = tenv.get_template(blueprint_name)
 
-    print yaml.load(rendered)
+    t_rendered = t.render(packages=all_packages)
+
+    return yaml.load(t_rendered)
+
+    
+def templateit(name):
+
+    print load_templated_yaml_rep(name)
 
 def main():
     name = sys.argv[1]

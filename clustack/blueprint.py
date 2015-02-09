@@ -13,6 +13,8 @@ def load_blueprint_yaml(filename):
     
     bp = BluePrint(name)
 
+    bp.version = yaml_rep['version']
+
     if 'dependencies' in yaml_rep:
         bp.direct_dependencies = yaml_rep['dependencies']
 
@@ -68,6 +70,8 @@ def get_available_blueprints():
 def load_blueprint_by_name(name):
     """Load a blueprint from a (string) name. Use settings to determine search
     path, then choose a loader."""
+
+    name = name.lower()
 
     available_blueprints = get_available_blueprints()
 
