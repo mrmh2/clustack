@@ -1,0 +1,10 @@
+name: opencv
+url : https://github.com/Itseez/opencv/archive/2.4.9.tar.gz
+version : 2.4.9
+
+dependencies :
+    - python
+    - eigen
+    - jpeg
+    - libpng
+    - libtiff

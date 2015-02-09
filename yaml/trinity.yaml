@@ -1,0 +1,13 @@
+name: trinity
+url : https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.2.tar.gz
+version : 2.0.2
+
+install :
+    - mkdir -p $installdir/bin
+    - cp Trinity $installdir/bin
+    - cp -r Inchworm $installdir/bin
+    - cp -r Chrysalis $installdir/bin
+    - cp -r Butterfly $installdir/bin
+    - cp -r trinity-plugins $installdir/bin
+    - cp -r util $installdir/bin
+    - cp -r PerlLib $installdir/bin

@@ -1,0 +1,6 @@
+name: bash
+url : http://ftpmirror.gnu.org/bash/bash-4.3.tar.gz
+version : 4.3
+
+dependencies :
+    - readline

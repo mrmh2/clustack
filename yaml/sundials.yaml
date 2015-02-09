@@ -1,0 +1,8 @@
+name: sundials
+url : http://ftp.mcs.anl.gov/pub/petsc/externalpackages/sundials-2.5.0.tar.gz
+version : 2.5.0
+
+dependencies :
+    - openblas
+
+configure_opts: --with-blas=openblas --with-lapack=openblas

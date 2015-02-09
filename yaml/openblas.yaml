@@ -1,0 +1,12 @@
+name: openblas
+url : https://github.com/xianyi/OpenBLAS/archive/v0.2.12.tar.gz
+version : 0.2.12
+
+dependencies :
+    - gcc
+
+build :
+    - make libs netlib shared
+
+install :
+    - make PREFIX=$prefix install

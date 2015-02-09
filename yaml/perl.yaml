@@ -2,5 +2,8 @@ name: perl
 url : http://www.cpan.org/src/5.0/perl-5.20.1.tar.gz
 version : 5.20.1
 
+dependencies :
+    - openssl
+
 configure :
-    - ./Configure -Dprefix=$prefix -dres
+    - ./Configure -Dprefix=$prefix -Dusethreads -dres

@@ -2,8 +2,8 @@ name: openssl
 url : https://www.openssl.org/source/openssl-1.0.1j.tar.gz
 version : 1.0.1j
 
-dependencies :
-  - perl
+#dependencies :
+#  - perl
 
 configure :
  - ./config shared --prefix=$prefix
