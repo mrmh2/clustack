@@ -5,4 +5,9 @@ version : 1.1
 dependencies :
     - htslib
 
-templater : $package[htslib].bin_dir
+build : 
+    - make HTSDIR={{ packages.htslib.source_dir }}
+
+install :
+    - mkdir -p $installdir/bin
+    - cp samtools $installdir/bin

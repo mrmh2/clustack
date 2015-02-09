@@ -2,7 +2,8 @@
 
 import sys
 
-from jinja2 import Template
+import yaml
+from jinja2 import FileSystemLoader, Environment, Template
 
 from component import load_component_by_name
 
@@ -12,9 +13,15 @@ def templateit(name):
 
     all_packages = {'htslib' : p}
 
-    t = Template("make HTSDIR={{ packages.htslib.include_dir }}")
+    tloader = FileSystemLoader('yaml/')
 
-    print t.render(packages=all_packages)
+    tenv = Environment(loader=tloader)
+
+    t = tenv.get_template('samtools.yaml')
+
+    rendered = t.render(packages=all_packages)
+
+    print yaml.load(rendered)
 
 def main():
     name = sys.argv[1]
