@@ -5,9 +5,10 @@ import sys
 import yaml
 from jinja2 import FileSystemLoader, Environment, Template
 
+from shelf import Shelf
 import settings
 
-def load_templated_yaml_rep(name, all_packages):
+def load_templated_yaml_rep(name, all_packages=None):
 
     name = name.lower()
 
@@ -18,6 +19,9 @@ def load_templated_yaml_rep(name, all_packages):
 
     t = tenv.get_template(blueprint_name)
 
+    s = Shelf()
+    if all_packages is None:
+        all_packages = s.installed_packages
     t_rendered = t.render(packages=all_packages)
 
     return yaml.load(t_rendered)

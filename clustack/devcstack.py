@@ -1,12 +1,8 @@
 from shelf import Shelf
+from template import load_templated_yaml_rep
 
 def main():
-    s = Shelf()
-
-    all_packages = s.installed_packages
-
-    print all_packages['samtools'].bin_dir
-
+    print load_templated_yaml_rep('samtools')
 
 if __name__ == "__main__":
     main()

@@ -35,9 +35,7 @@ def builder_by_name_yaml(name, load_dependencies=True):
     #     filename = os.path.join(yaml_dir, name + yaml_ext)
     #     return builder_from_yaml(filename, load_dependencies)
 
-    all_packages = load_all_packages()
-
-    yaml_rep = load_templated_yaml_rep(name, all_packages)
+    yaml_rep = load_templated_yaml_rep(name)
 
     return builder_from_yaml(yaml_rep, load_dependencies)
 

@@ -4,8 +4,8 @@ import tempfile
 import unittest
 import subprocess
 
-from builder import Builder
-import settings
+from clustack.builder import Builder
+import clustack.settings
 
 class BuilderStageTestCase(unittest.TestCase):
 
@@ -17,7 +17,7 @@ class BuilderStageTestCase(unittest.TestCase):
 
         self.temp_shelf_dir = tempfile.mkdtemp()
         # FIXME - global settings are ugly here
-        settings.shelf_dir = self.temp_shelf_dir
+        clustack.settings.shelf_dir = self.temp_shelf_dir
 
     def test_check_stage_allowed(self):
         with self.assertRaises(NameError):
