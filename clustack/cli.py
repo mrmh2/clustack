@@ -7,23 +7,33 @@ import inspect
 import argparse
 import importlib
 
-from clustack.builder import Builder
-from clustack.create import generate_yaml_builder
-from clustack.utils import sys_command
-from clustack import settings
-from clustack.yamlbuilder import builder_by_name_yaml
-from clustack.shelf import Shelf
+from builder import Builder
+from create import generate_yaml_builder
+from utils import sys_command
+import settings
+from yamlbuilder import builder_by_name_yaml
+from shelf import Shelf
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
+def pretty_columnular_output(list_of_strings, padding=2):
+    """Output a list of strings in nicely formatted columns."""
+
+    col_width = max(len(s) for s in list_of_strings) + padding
+
+    print "".join(s.ljust(col_width) for s in list_of_strings)
+
+
 def list_installed_packages(args):
+
     s = Shelf()
 
     package_names = s.installed_packages.keys()
 
     package_names.sort()
 
-    print '\t'.join(package_names)
+    #print '\t'.join(package_names)
+    pretty_columnular_output(package_names)
 
 def available_packages(args):
 

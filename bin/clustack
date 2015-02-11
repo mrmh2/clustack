@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python $CLUSTACK_ROOT/clustack/cli.py $@
