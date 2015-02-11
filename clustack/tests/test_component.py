@@ -3,6 +3,7 @@
 import os
 import unittest
 
+import clustack.settings
 import clustack.component
 from clustack.component import Package
 
@@ -18,9 +19,10 @@ class TestFileSystemLoader(unittest.TestCase):
 
     def setUp(self):
         self.fsl = clustack.component.FileSystemLoader()
+        self.shelf_dir = clustack.settings.shelf_dir
 
     def test_init(self):
-        expected_path = os.path.join(os.getcwd(), 'shelf')
+        expected_path = self.shelf_dir
         self.assertEqual(expected_path, self.fsl.base_path)
 
     def test_load(self):

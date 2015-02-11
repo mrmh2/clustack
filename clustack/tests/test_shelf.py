@@ -4,14 +4,19 @@ import os
 import unittest
 
 from clustack.shelf import Shelf
+import clustack.settings
 
 class TestShelf(unittest.TestCase):
 
-    def test_shelf_root_dir(self):
-        s = Shelf()
-        expected_dir = os.path.join(os.getcwd(), 'shelf')
+    def setUp(self):
+        self.shelf_dir = clustack.settings.shelf_dir
 
-        self.assertEqual(expected_dir, s.root_dir)
+    def test_shelf_base_path(self):
+        s = Shelf()
+
+        expected_dir = os.path.join(self.shelf_dir)
+
+        self.assertEqual(expected_dir, s.base_path)
 
     def test_installed_packages(self):
 
