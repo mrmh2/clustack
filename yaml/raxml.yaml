@@ -1,0 +1,10 @@
+name: raxml
+url : https://github.com/stamatak/standard-RAxML/archive/v8.0.20.tar.gz
+version : 8.0.20
+
+configure :
+    - cp Makefile.SSE3.gcc Makefile
+
+install :
+    - mkdir $installdir/bin
+    - cp raxmlHPC-SSE3 $installdir/bin

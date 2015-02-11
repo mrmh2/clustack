@@ -1,0 +1,7 @@
+name: bwa
+url : https://downloads.sf.net/project/bio-bwa/bwa-0.7.10.tar.bz2
+version : 0.7.10
+
+install :
+    - mkdir $installdir/bin
+    - cp bwa $installdir/bin

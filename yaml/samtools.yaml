@@ -9,5 +9,7 @@ build :
     - make HTSDIR={{ packages.htslib.source_dir }}
 
 install :
-    - mkdir -p $installdir/bin
+    - mkdir -p $installdir/bin $installdir/lib $installdir/include/bam
     - cp samtools $installdir/bin
+    - cp libbam.a $installdir/lib
+    - cp bam.h $installdir/include/bam
