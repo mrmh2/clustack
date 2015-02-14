@@ -5,3 +5,8 @@ from component import Component
 
 class SubPackage(Component):
     pass
+
+class PerlModule(Subpackage):
+
+    def check_setup(self):
+        pass

@@ -16,14 +16,15 @@ shelf_dir = config.get('Path settings', 'shelf_dir')
 
 if shelf_dir == "CWD":
     shelf_dir = os.path.join(os.getcwd(), 'shelf')
-#shelf_dir = os.path.join(os.getcwd(), 'shelf')
 
-base_program_dir = os.getcwd()
+clustack_root = os.environ['CLUSTACK_ROOT']
 
-yaml_dir = os.path.join(base_program_dir, 'yaml')
+yaml_dir = os.path.join(clustack_root, 'yaml')
 yaml_ext = '.yaml'
 
-stack_dir = os.path.join(base_program_dir, 'stacks')
+stack_dir = os.path.join(clustack_root, 'stacks')
 
 blueprint_path = [yaml_dir]
 blueprint_exts = [yaml_ext]
+
+resource_dir = os.path.join(clustack_root, 'resources')
