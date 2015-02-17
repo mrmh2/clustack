@@ -28,3 +28,6 @@ blueprint_path = [yaml_dir]
 blueprint_exts = [yaml_ext]
 
 resource_dir = os.path.join(clustack_root, 'resources')
+template_dir = os.path.join(resource_dir, 'templates')
+
+module_template = 'module.j2'
