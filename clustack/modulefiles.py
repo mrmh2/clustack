@@ -1,11 +1,31 @@
 """Clustack component for dealing with modules"""
 
+import os
+
 from jinja2 import FileSystemLoader, Environment, Template
 
 import settings
 from shelf import Shelf
 
-def stuff(package_name):
+def get_modulefile_path(package_name):
+    """Generate the modulefile path from module name"""
+
+    s = Shelf()
+
+    if package_name not in s.installed_packages:
+        raise Exception('Package {} not installed'.format(package_name))
+
+    package = s.installed_packages[package_name]
+
+    name = package.name
+    version = package.version
+
+    return os.path.join(settings.module_dir, name, version)
+
+def generate_modulefile_text(package_name):
+    """Given an installed package, generate the modulefile text necessary to
+    activate that package."""
+
     s = Shelf()
 
     if package_name not in s.installed_packages:
@@ -16,6 +36,8 @@ def stuff(package_name):
 
     t = tenv.get_template(settings.module_template)
 
-    print t.render(package=s.installed_packages[package_name])
+    package = s.installed_packages[package_name]
+
+    return t.render(package=package)
 
 

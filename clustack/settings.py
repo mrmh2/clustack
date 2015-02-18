@@ -31,3 +31,4 @@ resource_dir = os.path.join(clustack_root, 'resources')
 template_dir = os.path.join(resource_dir, 'templates')
 
 module_template = 'module.j2'
+module_dir = os.path.join(clustack_root, 'modulefiles')

@@ -9,10 +9,11 @@ import importlib
 
 from builder import Builder
 from create import generate_yaml_builder
-from utils import sys_command
+from utils import sys_command, safe_mkdir
 import settings
 from yamlbuilder import builder_by_name_yaml
 from shelf import Shelf
+from modulefiles import generate_modulefile_text, get_modulefile_path
 
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
@@ -86,6 +87,24 @@ def edit_builder(args):
 
     sys_command(['vim', full_path_name])
 
+def show_modulefile(args):
+    package_name = args.name
+
+    print generate_modulefile_text(package_name)
+
+
+def write_modulefile(args):
+    package_name = args.name
+    
+    full_path = get_modulefile_path(package_name)
+
+    dirname, filename = os.path.split(full_path)
+
+    safe_mkdir(dirname)
+
+    with open(full_path, 'w') as f:
+        file_text = generate_modulefile_text(package_name)
+        f.write(file_text)
 
 def main():
 
@@ -112,6 +131,18 @@ def main():
     parser_edit = subparsers.add_parser('edit', help='Edit a builder')
     parser_edit.add_argument('name')
     parser_edit.set_defaults(func=edit_builder)
+
+    parser_module = subparsers.add_parser('module', help='Manage modulefiles')
+    module_subparsers = parser_module.add_subparsers(help='module subcommand help',
+                                                     dest='module_subparser_name')
+
+    module_show = module_subparsers.add_parser('show', help='Show modulefile text')
+    module_show.add_argument('name')
+    module_show.set_defaults(func=show_modulefile)
+
+    module_write = module_subparsers.add_parser('write', help='Write modulefile')
+    module_write.add_argument('name')
+    module_write.set_defaults(func=write_modulefile)
 
     args = parser.parse_args()
 

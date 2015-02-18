@@ -1,3 +1,6 @@
 #%Module
 
-prepend_path PATH {{ package.bin_dir }}
+prepend-path PATH {{ package.bin_dir }}
+prepend-path LD_LIBRARY_PATH {{ package.lib_dir }}
+prepend-path LIBRARY_PATH {{ package.lib_dir }}
+prepend-path CPATH {{ package.include_dir }}

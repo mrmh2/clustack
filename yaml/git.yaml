@@ -2,5 +2,7 @@ name: git
 url : https://www.kernel.org/pub/software/scm/git/git-2.1.3.tar.gz
 version : 2.1.3
 
+configure_opts : --with-perl={{ packages.perl.bin_dir }}/perl
+
 dependencies :
     - perl
