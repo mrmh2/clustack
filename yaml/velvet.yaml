@@ -1,0 +1,8 @@
+name: velvet
+url : http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
+version : 1.2.10
+
+install :
+    - mkdir $installdir/bin
+    - cp velveth $installdir/bin
+    - cp velvetg $installdir/bin
