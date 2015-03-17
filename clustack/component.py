@@ -4,6 +4,8 @@ import os
 # from blueprint import load_blueprint_by_name
 import settings
 
+from utils import safe_mkdir
+
 def package_from_path(path):
     """Load a package from a filesystem path. Infer the name and version of the
     package from the path."""
@@ -26,6 +28,8 @@ class FileSystemLoader(PackageLoader):
             base_path = settings.shelf_dir
 
         self.base_path = base_path
+
+        safe_mkdir(base_path)
 
     def load(self, name):
 
