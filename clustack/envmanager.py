@@ -32,8 +32,13 @@ class EnvManager(object):
         self.my_env = self.start_env
         #self.cpath_list = self.init_pathlike_variable('CPATH')
         
-        self.pathvars = {pathvar : PathlikeVariable(pathvar, self.my_env)
-                         for pathvar in pathvars_to_manage}
+        self.pathvars = {}
+
+        for pathvar in pathvars_to_manage:
+            self.pathvars[pathvar] = PathlikeVariable(pathvar, self.my_env)
+
+    #{pathvar : PathlikeVariable(pathvar, self.my_env)
+    #                     for pathvar in pathvars_to_manage}
 
     def add_to_pathvar(self, var_name, path):
         self.pathvars[var_name].add_path(path)

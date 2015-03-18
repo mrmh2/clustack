@@ -45,7 +45,13 @@ def sys_command(args):
 
 def download_and_save(url, filename):
     
-     urllib.urlretrieve(url, filename)
+    try:
+        urllib.urlretrieve(url, filename)
+    except IOError, e:
+        print "Failed to open url: {}".format(url)
+        print "Error was: {}".format(e)
+        print "This may indicate that python was compiled without SSL support"
+        sys.exit(2)
 
 
 

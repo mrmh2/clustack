@@ -20,8 +20,8 @@ class Shelf(object):
 
         package_names = os.listdir(self.base_path)
 
-        packages = {name : self.loader.load(name)
-                    for name in package_names}
+        packages = dict((name, self.loader.load(name))
+                    for name in package_names)
 
         return packages
 

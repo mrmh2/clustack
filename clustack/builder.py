@@ -164,14 +164,14 @@ source and build are by default the same directory."""
         finished."""
 
         if stage_name not in builder_stages:
-            raise NameError('{} not a valid stage'.format(stage_name))
+            raise NameError('{0} not a valid stage'.format(stage_name))
 
         if stage_name == "DOWNLOAD":
             
             return os.path.exists(self.archive_file_path)
 
         if stage_name == "UNPACK":
-            willlog("Check unpack {}".format(self.name))
+            willlog("Check unpack {0}".format(self.name))
             if not os.path.exists(self.source_dir):
                 return False
 
@@ -277,16 +277,16 @@ source and build are by default the same directory."""
             configure_opts = ""
 
         if 'configure' in source_root_files:
-            configure_command = ['./configure', '--prefix={}'.format(self.install_dir)]
+            configure_command = ['./configure', '--prefix={0}'.format(self.install_dir)]
             if configure_opts is not "":
-                configure_command += ['{}'.format(configure_opts)]
+                configure_command += ['{0}'.format(configure_opts)]
             self.system(configure_command)
             return
 
         if 'CMakeLists.txt' in source_root_files:
             safe_mkdir(self.build_dir)
             os.chdir(self.build_dir)
-            cmake_flags = "-DCMAKE_INSTALL_PREFIX:PATH={}".format(self.install_dir)
+            cmake_flags = "-DCMAKE_INSTALL_PREFIX:PATH={0}".format(self.install_dir)
             self.system(['cmake', cmake_flags, self.source_dir])
             return
 

@@ -37,6 +37,8 @@ class FileSystemLoader(PackageLoader):
 
         versions = os.listdir(partial_path)
 
+        print versions
+
         if len(versions) > 1:
             raise Exception('Cannot handle more than one version of package')
 
@@ -64,8 +66,8 @@ def load_all_packages():
     """Load all installed packages.
     TODO: Move to environment type object."""
 
-    package_dict = {n : load_component_by_name(n)
-                    for n in list_packages()}
+    package_dict = dict((n, load_component_by_name(n))
+                    for n in list_packages())
 
     return package_dict
 
