@@ -14,7 +14,7 @@ def main():
 
     st = load_stack_by_name(args.stack_name)
 
-    st.env_manager.my_env['PS1'] = "<{}>".format(args.stack_name) + st.env_manager.PS1
+    st.env_manager.my_env['PS1'] = "<{0}>".format(args.stack_name) + st.env_manager.PS1
 
     st.shell()
 
