@@ -1,3 +1,5 @@
+"""Package level variables."""
+
 import os
 import sys
 import ConfigParser
@@ -32,3 +34,5 @@ template_dir = os.path.join(resource_dir, 'templates')
 
 module_template = 'module.j2'
 module_dir = os.path.join(clustack_root, 'modulefiles')
+
+receipt_file = 'clustack-package-receipt.yaml'

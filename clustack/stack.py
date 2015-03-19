@@ -6,6 +6,7 @@ import settings
 from envmanager import EnvManager
 from yamlbuilder import yaml_builders_in_path
 from component import load_component_by_name
+from shelf import Shelf
 
 def get_dependency_tree(name):
     """Given the name of a builder, return its dependency tree. Each node of
@@ -63,9 +64,27 @@ def load_stack_by_name(name):
 
 class Stack(object):
 
-    def __init__(self):
+    def __init__(self, shelf=None):
         self.env_manager = EnvManager()
         self.included_components = {}
+
+        if shelf == None:
+            self.shelf = Shelf()
+
+    def add_by_name(self, name, add_dependencies=False):
+        """Add a component from a (string) name."""
+
+        if name in self.included_components:
+            return
+
+        package = self.shelf.find_package(name)
+        self.included_components[name] = package
+        package.update_stack(self)
+
+        if add_dependencies:
+            for dependency in package.direct_dependencies:
+                self.add_by_name(dependency)
+
 
     def add_component(self, component):
 
