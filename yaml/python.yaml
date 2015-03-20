@@ -7,3 +7,4 @@ configure_opts : --enable-shared
 dependencies :
     - openssl
     - readline
+    - zlib
