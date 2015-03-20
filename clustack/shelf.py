@@ -27,8 +27,12 @@ class Shelf(object):
 
         for package_name in package_names:
 
-            package_versions = os.listdir(os.path.join(self.base_path, 
-                    package_name))
+
+            try:
+                package_versions = os.listdir(os.path.join(self.base_path, 
+                        package_name))
+            except OSError:
+                package_versions = []
 
             for package_version in package_versions:
 
