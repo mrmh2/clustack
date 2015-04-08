@@ -62,6 +62,7 @@ class EnvManager(object):
     def run_command(self, command):
         """Run a command with our internal environment."""
         try:
+            print 'CLUSTACK', ' '.join(command)
             p = subprocess.Popen(command, env=self.my_env)
         except OSError, e:
             print "OSError", e
@@ -69,6 +70,11 @@ class EnvManager(object):
             sys.exit(2)
 
         p.wait()
+
+        if p.returncode != 0:
+            print "Failed command"
+            print self.my_env
+            sys.exit(p.returncode)
 
         return p.returncode
 
@@ -96,7 +102,10 @@ class EnvManager(object):
 
     def update_CPPFLAGS(self):
         self.my_env['CPPFLAGS'] = ' '.join('-I' + s 
-                                           for s in self.CPATH.split(":"))
+                                           for s in self.CPATH.split(":")
+                                           if len(s))
+
+        print self.my_env['CPPFLAGS']
 
     def update_LDFLAGS(self):
         self.my_env['LDFLAGS'] = ' '.join('-L' + s 

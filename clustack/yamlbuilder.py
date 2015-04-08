@@ -108,7 +108,7 @@ def builder_from_yaml(yaml_rep, load_dependencies=True):
             handle_dependencies(yamlBuilder, yaml_rep)
 
     if 'use_build_dir' in yaml_rep:
-        if yaml_rep['use_build_dir'] is 'True':
+        if yaml_rep['use_build_dir'] is True:
             yamlBuilder.build_in_source = False
 
     if 'build' in yaml_rep:

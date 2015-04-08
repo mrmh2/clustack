@@ -277,7 +277,8 @@ source and build are by default the same directory."""
             configure_opts = ""
 
         if 'configure' in source_root_files:
-            configure_command = ['./configure', '--prefix={0}'.format(self.install_dir)]
+            configure_path = os.path.join(self.source_dir, 'configure')
+            configure_command = [configure_path, '--prefix={0}'.format(self.install_dir)]
             if configure_opts is not "":
                 configure_command += ['{0}'.format(configure_opts)]
             self.system(configure_command)
