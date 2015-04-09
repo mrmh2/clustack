@@ -24,12 +24,13 @@ class TestBluePrint(unittest.TestCase):
 
         self.assertEqual(bp_python.name, 'python')
 
-        self.assertEqual(bp_python.direct_dependencies, ['openssl', 'readline'])
+        self.assertEqual(bp_python.direct_dependencies, ['openssl', 'readline', 
+                                                         'zlib'])
 
     def test_full_dependencies(self):
         bp_python = clustack.blueprint.load_blueprint_by_name('python')
 
-        expected_deps = ['readline', 'ncurses', 'openssl']
+        expected_deps = ['zlib', 'readline', 'ncurses', 'openssl']
         
         self.assertEqual(bp_python.full_dependencies, expected_deps)
 

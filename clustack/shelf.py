@@ -59,3 +59,20 @@ class Shelf(object):
 
         return None
 
+    def find_all_dependencies(self, package_name):
+
+        if package_name not in self.installed_packages:
+            raise Exception('Cannot find package in shelf: {}'.format(package_name))
+
+        all_dependencies = set([])
+
+        packages_to_check = [package_name]
+
+        while len(packages_to_check):
+            package = self.find_package(packages_to_check.pop())
+            if package is not None:
+                all_dependencies |= set(package.direct_dependencies)
+                packages_to_check += package.direct_dependencies
+
+        return list(all_dependencies)
+

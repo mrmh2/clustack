@@ -4,7 +4,7 @@ from stack import Stack
 def main():
 	s = Stack()
 
-	s.add_by_name('python', add_dependencies=True)
+	s.add_by_name('gcc', add_dependencies=True)
 
 	print s.included_components
 

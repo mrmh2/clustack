@@ -36,3 +36,5 @@ module_template = 'module.j2'
 module_dir = os.path.join(clustack_root, 'modulefiles')
 
 receipt_file = 'clustack-package-receipt.yaml'
+
+prefer_own_gcc = True

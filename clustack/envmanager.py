@@ -37,9 +37,6 @@ class EnvManager(object):
         for pathvar in pathvars_to_manage:
             self.pathvars[pathvar] = PathlikeVariable(pathvar, self.my_env)
 
-    #{pathvar : PathlikeVariable(pathvar, self.my_env)
-    #                     for pathvar in pathvars_to_manage}
-
     def add_to_pathvar(self, var_name, path):
         self.pathvars[var_name].add_path(path)
 
@@ -62,7 +59,6 @@ class EnvManager(object):
     def run_command(self, command):
         """Run a command with our internal environment."""
         try:
-            print 'CLUSTACK', ' '.join(command)
             p = subprocess.Popen(command, env=self.my_env)
         except OSError, e:
             print "OSError", e
@@ -95,6 +91,9 @@ class EnvManager(object):
 
     def __getattr__(self, name):
 
+        if name not in self.__dict__:
+            raise AttributeError('No such attribute: {}'.format(name))
+
         if name in self.my_env:
             return self.my_env[name]
         
@@ -102,14 +101,12 @@ class EnvManager(object):
 
     def update_CPPFLAGS(self):
         self.my_env['CPPFLAGS'] = ' '.join('-I' + s 
-                                           for s in self.CPATH.split(":")
+                                           for s in self.my_env['CPATH'].split(":")
                                            if len(s))
-
-        print self.my_env['CPPFLAGS']
 
     def update_LDFLAGS(self):
         self.my_env['LDFLAGS'] = ' '.join('-L' + s 
-                                          for s in self.LIBRARY_PATH.split(":"))
+                                          for s in self.my_env['LIBRARY_PATH'].split(":"))
 
     def shell(self):
         subprocess.call(['bash', '--norc'], env=self.my_env)

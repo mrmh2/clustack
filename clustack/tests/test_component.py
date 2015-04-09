@@ -10,7 +10,7 @@ from clustack.component import Package
 class TestPackage(unittest.TestCase):
 
     def test_package_init(self):
-        p = Package('zlib', '1.2.8')
+        p = Package('zlib', '1.2.8', '/tmp')
 
         self.assertEqual(p.name, 'zlib')
         self.assertEqual(p.version, '1.2.8')
@@ -26,7 +26,7 @@ class TestFileSystemLoader(unittest.TestCase):
         self.assertEqual(expected_path, self.fsl.base_path)
 
     def test_load(self):
-        zlib_package = self.fsl.load('zlib')
+        zlib_package = self.fsl.load('zlib', '1.2.8')
 
         self.assertEqual(zlib_package.name, 'zlib')
         self.assertEqual(zlib_package.version, '1.2.8')

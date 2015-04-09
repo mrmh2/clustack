@@ -121,12 +121,15 @@ class Package(Component):
     def lib_dir(self):
         return os.path.join(self.base_path, self.arch, 'lib')
 
+    def update_env_manager(self, env_manager):
+        env_manager.add_to_pathvar('PATH', self.bin_dir)
+        env_manager.add_to_pathvar('CPATH', self.include_dir)
+        env_manager.add_to_pathvar('LIBRARY_PATH', self.lib_dir)
+        env_manager.add_to_pathvar('LD_LIBRARY_PATH', self.lib_dir)
+        
     def update_stack(self, stack):
 
-        stack.env_manager.add_to_pathvar('PATH', self.bin_dir)
-        stack.env_manager.add_to_pathvar('CPATH', self.include_dir)
-        stack.env_manager.add_to_pathvar('LIBRARY_PATH', self.lib_dir)
-        stack.env_manager.add_to_pathvar('LD_LIBRARY_PATH', self.lib_dir)
+        self.update_env_manager(stack.env_manager)
 
     # @property
     # def full_dependencies(self):
