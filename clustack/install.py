@@ -1,6 +1,9 @@
 """Functions for installing a new package."""
 
+import os
 import sys
+
+import yaml
 
 import settings
 from envmanager import EnvManager
@@ -58,6 +61,16 @@ def install_package(package_name):
     yaml_builder.env_manager.update_LDFLAGS()
 
     yaml_builder.process_all_stages()
+
+    yaml_builder.yaml_rep['environment_flags'] = build_env.my_env
+
+    yaml_rep = yaml.dump(yaml_builder.yaml_rep, default_flow_style=False)
+
+    receipt_path = os.path.join(yaml_builder.shelf_dir, settings.receipt_file)
+
+    with open(receipt_path, 'w') as f:
+        f.write(yaml_rep)
+
 
 def main():
     package_name = sys.argv[1]

@@ -90,6 +90,7 @@ def builder_from_yaml(yaml_rep, load_dependencies=True):
 
     yamlBuilder = Builder(name, url)
     yamlBuilder._version = str(version)
+    yamlBuilder.yaml_rep = yaml_rep
 
     #print yaml_rep
 
