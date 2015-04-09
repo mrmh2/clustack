@@ -176,6 +176,9 @@ def builder_from_yaml(yaml_rep, load_dependencies=True):
 
         yamlBuilder.subpackage = subpackage
 
+    if 'source_prefix' in yaml_rep:
+        source_prefix = yaml_rep['source_prefix']
+        yamlBuilder.source_prefix = source_prefix
 
     return yamlBuilder
 

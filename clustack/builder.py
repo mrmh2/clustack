@@ -87,7 +87,10 @@ source and build are by default the same directory."""
         
         base_dir/package_name/package_version/source"""
 
-        return os.path.join(self.shelf_dir, 'source')
+        try:
+            return os.path.join(self.shelf_dir, 'source', self.source_prefix)
+        except AttributeError:
+            return os.path.join(self.shelf_dir, 'source')
 
     @property
     def build_dir(self):

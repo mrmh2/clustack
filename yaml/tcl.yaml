@@ -1,0 +1,5 @@
+name: tcl
+url : http://downloads.sourceforge.net/project/tcl/Tcl/8.6.3/tcl8.6.3-src.tar.gz
+version : 8.6.3
+
+source_prefix : unix
