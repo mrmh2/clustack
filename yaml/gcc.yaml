@@ -4,6 +4,8 @@ version : 4.9.2
 
 configure_opts : --disable-multilib
 
+use_build_dir : True
+
 dependencies :
     - mpc
     - mpfr

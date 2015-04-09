@@ -15,6 +15,8 @@ from yamlbuilder import builder_by_name_yaml
 from shelf import Shelf
 from modulefiles import generate_modulefile_text, get_modulefile_path
 
+from install import install_package
+
 package_dir = os.path.join(os.getcwd(), "clustack/packages")
 
 def pretty_columnular_output(list_of_strings, padding=2):
@@ -62,15 +64,11 @@ def install_from_import(args):
                 loaded_builder = obj()
                 loaded_builder.install()
 
-def install_package(args):
+def install_package_cli(args):
 
     name = args.name
 
-    #yaml_path = os.path.join('yaml', name + '.yaml')
-
-    yaml_builder = builder_by_name_yaml(name)
-
-    yaml_builder.process_all_stages()
+    install_package(name)
     
 def create_builder(args):
 
@@ -121,7 +119,7 @@ def main():
 
     parser_install = subparsers.add_parser('install', help='Install a package')
     parser_install.add_argument('name')
-    parser_install.set_defaults(func=install_package)
+    parser_install.set_defaults(func=install_package_cli)
 
     parser_create = subparsers.add_parser('create', help='Create a builder')
     parser_create.add_argument('name')

@@ -6,6 +6,8 @@ import settings
 from envmanager import EnvManager
 from shelf import Shelf
 from yamlbuilder import builder_by_name_yaml
+from blueprint import load_blueprint_by_name
+
 
 class BuildEnvironment(EnvManager):
 
@@ -16,6 +18,8 @@ class BuildEnvironment(EnvManager):
 def install_package(package_name):
     """Given a package name, determine package dependencies, install if
     necessary and then install the package."""
+
+    print 'Installing {0}'.format(package_name)
 
     # Generate build environment
 
@@ -32,12 +36,26 @@ def install_package(package_name):
         print '\n'.join(missing_dependencies)
         sys.exit(2)
 
-    for package_name in (gcc_dependencies + ['gcc']):
-        package = current_shelf.find_package(package_name)
+    for dep_package_name in (gcc_dependencies + ['gcc']):
+        package = current_shelf.find_package(dep_package_name)
+        package.update_env_manager(build_env)
+    
+    package_blueprint = load_blueprint_by_name(package_name)
+    dependencies = package_blueprint.direct_dependencies
+    missing_dependencies = set(dependencies) - set(current_shelf.installed_packages)
+
+    for dependency in missing_dependencies:
+        install_package(dependency)
+
+    for dependency in dependencies:
+        package = current_shelf.find_package(dependency)
         package.update_env_manager(build_env)
 
-    yaml_builder = builder_by_name_yaml(package_name)
+    yaml_builder = builder_by_name_yaml(package_name, load_dependencies=False)
+
     yaml_builder.env_manager = build_env
+    yaml_builder.env_manager.update_CPPFLAGS()
+    yaml_builder.env_manager.update_LDFLAGS()
 
     yaml_builder.process_all_stages()
 

@@ -40,6 +40,7 @@ def safe_mkdir(dir_path):
 def sys_command(args):
     
 #    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print 'CLUSTACK', ' '.join(args)
     p = subprocess.Popen(args)
     p.wait()
 

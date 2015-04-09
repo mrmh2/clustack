@@ -6,4 +6,4 @@ dependencies :
     - openssl
 
 configure :
-    - ./Configure -Dprefix=$prefix -Dusethreads -dres
+    - ./Configure -Dprefix=$prefix -Dusethreads -dres -Dcc=gcc
