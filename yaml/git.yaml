@@ -6,3 +6,4 @@ configure_opts : --with-perl={{ packages.perl.bin_dir }}/perl
 
 dependencies :
     - perl
+    - zlib

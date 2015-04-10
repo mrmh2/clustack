@@ -1,4 +1,8 @@
 #%Module
+#
+{% for dependency in package.direct_dependencies %}
+module load {{ dependency }}
+{% endfor %}
 
 prepend-path PATH {{ package.bin_dir }}
 prepend-path LD_LIBRARY_PATH {{ package.lib_dir }}

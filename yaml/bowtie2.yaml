@@ -3,5 +3,13 @@ url : https://github.com/BenLangmead/bowtie2/archive/v2.2.4.tar.gz
 version : 2.2.4
 
 install:
-  - mkdir $installdir/bin
+  - mkdir -p $installdir/bin
   - cp bowtie2 $installdir/bin
+  - cp bowtie2-align-l $installdir/bin
+  - cp bowtie2-align-s $installdir/bin
+  - cp bowtie2-build $installdir/bin
+  - cp bowtie2-build-l $installdir/bin
+  - cp bowtie2-build-s $installdir/bin
+  - cp bowtie2-inspect $installdir/bin
+  - cp bowtie2-inspect-l $installdir/bin
+  - cp bowtie2-inspect-s $installdir/bin

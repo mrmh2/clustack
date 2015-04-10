@@ -15,7 +15,7 @@ def get_modulefile_path(package_name):
     if package_name not in s.installed_packages:
         raise Exception('Package {} not installed'.format(package_name))
 
-    package = s.installed_packages[package_name]
+    package = s.find_package(package_name)
 
     name = package.name
     version = package.version
@@ -36,7 +36,7 @@ def generate_modulefile_text(package_name):
 
     t = tenv.get_template(settings.module_template)
 
-    package = s.installed_packages[package_name]
+    package = s.find_package(package_name)
 
     return t.render(package=package)
 

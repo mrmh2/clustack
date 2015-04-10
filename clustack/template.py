@@ -22,7 +22,9 @@ def load_templated_yaml_rep(name, all_packages=None):
     s = Shelf()
     if all_packages is None:
         all_packages = s.installed_packages
-    t_rendered = t.render(packages=all_packages)
+
+    loaded_packages = {name: s.find_package(name) for name in all_packages}
+    t_rendered = t.render(packages=loaded_packages)
 
     return yaml.load(t_rendered)
 

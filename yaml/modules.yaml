@@ -1,3 +1,10 @@
 name: modules
 url : http://downloads.sourceforge.net/project/modules/Modules/modules-3.2.10/modules-3.2.10.tar.gz
 version : 3.2.10
+
+CPPFLAGS : -DUSE_INTERP_ERRORLINE
+
+configure_opts : --with-tcl={{ packages.tcl.lib_dir }}
+
+dependencies :
+ - tcl

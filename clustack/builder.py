@@ -91,6 +91,12 @@ source and build are by default the same directory."""
             return os.path.join(self.shelf_dir, 'source', self.source_prefix)
         except AttributeError:
             return os.path.join(self.shelf_dir, 'source')
+    
+    @property
+    def source_unpack_dir(self):
+        """Directory into which source will be unpacked."""
+
+        return os.path.join(self.shelf_dir, 'source')
 
     @property
     def build_dir(self):
@@ -241,8 +247,8 @@ source and build are by default the same directory."""
         know what directory name will be in the tarball, we unpack to a temporary
         directory and then move to the source directory."""
 
-        if os.path.exists(self.source_dir):
-            shutil.rmtree(self.source_dir)
+        if os.path.exists(self.source_unpack_dir):
+            shutil.rmtree(self.source_unpack_dir)
 
         tmpdir = tempfile.mkdtemp()
         self.system(['tar', '-xf', self.archive_file_path, '-C', tmpdir])
@@ -254,9 +260,9 @@ source and build are by default the same directory."""
         else:
             raise Exception('Multiple files in unpack directory')
 
-        shutil.move(unpack_path, self.source_dir)
+        shutil.move(unpack_path, self.source_unpack_dir)
 
-        if 'CMakeLists.txt' in os.listdir(self.source_dir):
+        if 'CMakeLists.txt' in os.listdir(self.source_unpack_dir):
             self.build_in_source = False
 
         # # Unpack only if we haven't done so already

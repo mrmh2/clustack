@@ -180,6 +180,10 @@ def builder_from_yaml(yaml_rep, load_dependencies=True):
         source_prefix = yaml_rep['source_prefix']
         yamlBuilder.source_prefix = source_prefix
 
+    # FIXME - handle CPPFLAGS better
+    if 'CPPFLAGS' in yaml_rep:
+        yamlBuilder.env_manager.extra_CPPFLAGS = yaml_rep['CPPFLAGS']
+
     return yamlBuilder
 
 def main():

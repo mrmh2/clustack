@@ -56,6 +56,13 @@ def install_package(package_name):
 
     yaml_builder = builder_by_name_yaml(package_name, load_dependencies=False)
 
+    try:
+        extra_CPPFLAGS = yaml_builder.env_manager.extra_CPPFLAGS
+    except AttributeError:
+        extra_CPPFLAGS = ''
+
+    build_env.extra_CPPFLAGS = extra_CPPFLAGS
+
     yaml_builder.env_manager = build_env
     yaml_builder.env_manager.update_CPPFLAGS()
     yaml_builder.env_manager.update_LDFLAGS()

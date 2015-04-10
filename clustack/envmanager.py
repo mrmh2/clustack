@@ -100,7 +100,13 @@ class EnvManager(object):
         raise AttributeError('No variable in environment: {}'.format(name))
 
     def update_CPPFLAGS(self):
-        self.my_env['CPPFLAGS'] = ' '.join('-I' + s 
+
+        try:
+            extra_flags = self.extra_CPPFLAGS
+        except AttributeError:
+            extra_flags = ''
+
+        self.my_env['CPPFLAGS'] = extra_flags + ' '.join('-I' + s 
                                            for s in self.my_env['CPATH'].split(":")
                                            if len(s))
 
