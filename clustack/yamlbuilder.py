@@ -180,6 +180,15 @@ def builder_from_yaml(yaml_rep, load_dependencies=True):
         source_prefix = yaml_rep['source_prefix']
         yamlBuilder.source_prefix = source_prefix
 
+    if 'post_install' in yaml_rep:
+        def post_install(self):
+            for command in yaml_rep['post_install']:
+                command_template = Template(command)
+                spaced_command = command_template.substitute(var_list).split(" ")
+                self.env_manager.run_command(spaced_command)
+
+        yamlBuilder.post_install = post_install
+
     # FIXME - handle CPPFLAGS better
     if 'CPPFLAGS' in yaml_rep:
         yamlBuilder.env_manager.extra_CPPFLAGS = yaml_rep['CPPFLAGS']

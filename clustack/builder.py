@@ -361,6 +361,11 @@ source and build are by default the same directory."""
             self.build()
             self.install()
 
+        try:
+            self.post_install(self)
+        except AttributeError:
+            pass
+
     # def link_from_subdir(self, subdir_name, dest_dir):
     #     """Link files in a particular subdirectory of the compiled package (e.g.
     #     bin, lib, include) into the overall equivalent directory"""

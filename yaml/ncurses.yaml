@@ -1,3 +1,6 @@
 name: ncurses
 url : http://ftpmirror.gnu.org/ncurses/ncurses-5.9.tar.gz
 version : 5.9
+
+post_install :
+    - ln -s $includedir/ncurses/ncurses.h $includedir/ncurses.h
