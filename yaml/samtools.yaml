@@ -4,9 +4,10 @@ version : 1.1
 
 dependencies :
     - htslib
+    - ncurses
 
 build : 
-    - make HTSDIR={{ packages.htslib.source_dir }}
+    - make HTSDIR={{ packages.htslib.source_dir }} LIBCURSES=-lncurses
 
 install :
     - mkdir -p $installdir/bin $installdir/lib $installdir/include/bam

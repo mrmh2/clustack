@@ -18,18 +18,7 @@ class BuildEnvironment(EnvManager):
         EnvManager.__init__(self)
         
 
-def install_package(package_name):
-    """Given a package name, determine package dependencies, install if
-    necessary and then install the package."""
-
-    print 'Installing {0}'.format(package_name)
-
-    # Generate build environment
-
-    build_env = BuildEnvironment()
-
-    current_shelf = Shelf()
-
+def setup_own_gcc(current_shelf, build_env):
     gcc_dependencies = current_shelf.find_all_dependencies('gcc')
 
     missing_dependencies = set(gcc_dependencies) - set(current_shelf.installed_packages)
@@ -42,7 +31,21 @@ def install_package(package_name):
     for dep_package_name in (gcc_dependencies + ['gcc']):
         package = current_shelf.find_package(dep_package_name)
         package.update_env_manager(build_env)
-    
+ 
+def install_package(package_name):
+    """Given a package name, determine package dependencies, install if
+    necessary and then install the package."""
+
+    print 'Installing {0}'.format(package_name)
+
+    # Generate build environment
+
+    build_env = BuildEnvironment()
+
+    current_shelf = Shelf()
+
+    setup_own_gcc(current_shelf, build_env)
+   
     package_blueprint = load_blueprint_by_name(package_name)
     dependencies = package_blueprint.direct_dependencies
     missing_dependencies = set(dependencies) - set(current_shelf.installed_packages)

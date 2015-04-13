@@ -70,7 +70,6 @@ class EnvManager(object):
         if p.returncode != 0:
             print "Failed command"
             print self.my_env
-            sys.exit(p.returncode)
 
         return p.returncode
 

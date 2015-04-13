@@ -1,0 +1,6 @@
+name: meme
+url : http://ebi.edu.au/ftp/software/MEME/4.10.0/meme_4.10.0_4.tar.gz
+version : 4.10.0_4
+
+dependencies :
+    - zlib

@@ -4,3 +4,4 @@ version : 5.9
 
 post_install :
     - ln -s $includedir/ncurses/ncurses.h $includedir/ncurses.h
+    - ln -s $includedir/ncurses/curses.h $includedir/curses.h
